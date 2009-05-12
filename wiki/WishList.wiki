@@ -4,6 +4,7 @@
 = Coming up =
 
   * Detect the first Guild Wars install at first start
+  * Detect whether a copy at a certain location has been launched already, do not attempt to relaunch same copy.
 
 = Later =
   * Argument creation helper
