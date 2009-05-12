@@ -31,6 +31,7 @@ namespace GWMultiLaunch
 
         private const string DEFAULT_ARGUMENT = "-windowed";
         private const string MUTEX_MATCH_STRING = "AN-Mutex-Window";
+        private const string GW_REG_LOCATION = "SOFTWARE\\ArenaNet\\Guild Wars";
 
         #endregion
 
@@ -77,12 +78,22 @@ namespace GWMultiLaunch
 
         public static string GetCurrentGuildWarsPath()
         {
-            RegistryKey currentKey = Registry.LocalMachine;
+            RegistryKey localMachineKey = Registry.LocalMachine;    //for xp
+            RegistryKey currentUserKey = Registry.CurrentUser;      //for vista/7
+
             try
             {
-                currentKey = currentKey.OpenSubKey("SOFTWARE\\ArenaNet\\Guild Wars", false);
-                string path = currentKey.GetValue("Path").ToString();
-                return path;
+                RegistryKey activeKey;
+
+                activeKey = localMachineKey.OpenSubKey(GW_REG_LOCATION, false);
+
+                //will be null for vista/windows 7
+                if (activeKey == null)
+                {
+                    activeKey = currentUserKey.OpenSubKey(GW_REG_LOCATION, false);
+                }
+
+                return activeKey.GetValue("Path").ToString();
             }
             catch (Exception)
             {
@@ -170,20 +181,34 @@ namespace GWMultiLaunch
             }
         }
 
-        public static void SetRegistry(string gwPath)
+        public static bool SetRegistry(string gwPath)
         {
-            RegistryKey currentKey = Registry.LocalMachine;
+            RegistryKey localMachineKey = Registry.LocalMachine;    //for xp
+            RegistryKey currentUserKey = Registry.CurrentUser;      //for vista/7
+
             try
             {
-                currentKey = currentKey.OpenSubKey("SOFTWARE\\ArenaNet\\Guild Wars", true);
-                currentKey.SetValue("Path", gwPath);
-                currentKey.SetValue("Src", gwPath);
-                currentKey.Close();
+                RegistryKey activeKey;
+
+                activeKey = localMachineKey.OpenSubKey(GW_REG_LOCATION, true);
+
+                //will be null for vista/windows 7
+                if (activeKey == null)
+                {
+                    activeKey = currentUserKey.OpenSubKey(GW_REG_LOCATION, true);
+                }
+
+                activeKey.SetValue("Path", gwPath);
+                activeKey.SetValue("Src", gwPath);
+
+                activeKey.Close();
             }
             catch (Exception)
             {
-                
+                return false;
             }
+
+            return true;
         }
 
         #endregion
@@ -205,8 +230,8 @@ namespace GWMultiLaunch
                     //add to list
                     int index = profilesListBox.Items.Add(dlg.FileName);
 
-                    //select this item
-                    profilesListBox.SelectedIndex = index;
+                    //deselect all
+                    profilesListBox.SelectedIndex = -1;
                 }
             }
         }
@@ -234,6 +259,10 @@ namespace GWMultiLaunch
                 for (int i = 0; i < selectedInstalls.Length; i++)
                 {
                     selectedInstall = selectedInstalls[i];
+                    if (!File.Exists(selectedInstall))
+                    {
+                        MessageBox.Show("The path: " + selectedInstall + " does not exist!");
+                    }
 
                     //get current gw path from registry
                     string currentPath = Form1.GetCurrentGuildWarsPath();
@@ -245,6 +274,7 @@ namespace GWMultiLaunch
                     LaunchGame(selectedInstall, mFileCloset.GetArgument(selectedInstall));
 
                     //delay for defined valued in ini file
+                    //gives time for gw to catch the path for updating the right install
                     System.Threading.Thread.Sleep(mFileCloset.RegistryCooldown);
 
                     //set back to saved path
@@ -318,7 +348,7 @@ namespace GWMultiLaunch
 
             if (selectedInstall == String.Empty)
             {
-                MessageBox.Show("No install selected!");
+                MessageBox.Show("No installation selected!");
             }
             else
             {
@@ -384,18 +414,25 @@ namespace GWMultiLaunch
             {
                 //use guild wars folder as starting point to start search
                 string gwPath = GetCurrentGuildWarsPath();
-                string directory = Directory.GetParent(gwPath).FullName;
 
-                try
+                if (File.Exists(gwPath))
                 {
-                    string[] texmodFiles = Directory.GetFiles(directory, "texmod.exe", SearchOption.AllDirectories);
+                    string directory = Directory.GetParent(gwPath).FullName;
 
-                    if (texmodFiles.Length > 0)
+                    try
                     {
-                        texmodPath = texmodFiles[0];    //use first match
+                        string[] texmodFiles = Directory.GetFiles(directory, "texmod.exe", SearchOption.AllDirectories);
+
+                        if (texmodFiles.Length > 0)
+                        {
+                            texmodPath = texmodFiles[0];    //use first match
+                        }
+                    }
+                    catch (Exception) 
+                    {
+                        texmodPath = string.Empty;
                     }
                 }
-                catch (Exception) { }
             }
 
             //ask user for it
@@ -415,6 +452,7 @@ namespace GWMultiLaunch
             {
                 //attempt launch
                 bool launchSuccess = LaunchProgram(texmodPath);
+
                 if (launchSuccess == true)
                 {
                     //write path to ini

@@ -31,7 +31,7 @@ namespace GWMultiLaunch
         {
             FileManager fileCloset = new FileManager();
 
-            if (args.Length >= 2)
+            if (args.Length >= 1)
             {
                 // Shortcut launching mode
 
@@ -44,9 +44,17 @@ namespace GWMultiLaunch
                 //clear mutex
                 Form1.ClearMutex();
 
-                Form1.LaunchGame(args[0], args[1]);
+                if (args.Length >= 2)
+                {
+                    Form1.LaunchGame(args[0], args[1]);
+                }
+                else
+                {
+                    Form1.LaunchGame(args[0], string.Empty);
+                }
 
                 //delay for defined valued in ini file
+                //gives time for gw to catch the path for updating the right install
                 System.Threading.Thread.Sleep(fileCloset.RegistryCooldown);
 
                 //set back to saved path
