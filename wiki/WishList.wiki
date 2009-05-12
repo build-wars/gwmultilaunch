@@ -5,8 +5,12 @@
 
   * Detect the first Guild Wars install at first start
   * Detect whether a copy at a certain location has been launched already, do not attempt to relaunch same copy.
+  * Speed up process detection
 
 = Later =
   * Argument creation helper
   * Add button for making an extra copy of Guild Wars
   * Shortcut creation not dependent on windows scripting host dll
+
+= Need help on =
+  * Virtualize file access to gw.dat (no need to make multiple copies anymore)
