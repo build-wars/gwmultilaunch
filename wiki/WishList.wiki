@@ -10,6 +10,7 @@
 = Later =
   * Argument creation helper
   * Add button for making an extra copy of Guild Wars
+    * See http://msdn.microsoft.com/en-us/magazine/cc163851.aspx
   * Shortcut creation not dependent on windows scripting host dll
 
 = Need help on =
