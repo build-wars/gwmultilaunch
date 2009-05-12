@@ -1,0 +1,11 @@
+#summary Wishlist for upcoming features.
+#labels Featured,Phase-Requirements,Phase-Design
+
+= Coming up =
+
+  * Detect the first Guild Wars install at first start
+
+= Later =
+  * Argument creation helper
+  * Add button for making an extra copy of Guild Wars
+  * Shortcut creation not dependent on windows scripting host dll
