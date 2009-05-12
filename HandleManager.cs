@@ -224,29 +224,10 @@ namespace GWMultiLaunch
         {
             string handleName;
 
-            //Should be mapping to OBJECT_NAME_INFORMATION first, but we don't care about the NameBuffer field which comes
-            //after the UNICODE_STRING field.
-
-            // Map memory to structure
-            UNICODE_STRING uniString = new UNICODE_STRING();
-            uniString = (UNICODE_STRING)Marshal.PtrToStructure(pStringBuffer, uniString.GetType());
-
-
-            // Map string buffer to string
-            if (uniString.Buffer == IntPtr.Zero)
-            {
-                handleName = String.Empty;
-            }
-            else
-            {
-                handleName = Marshal.PtrToStringUni(uniString.Buffer);
-            }
-
-            ////Alternate Method: this seems to also work, chose the other one since it is easier to follow
-            //// (UNICODE_STRING.Length) + (UNICODE_STRING.MaxLength) + (IntPtr.Size) = offset
-            //// 2 + 2 + 4 = 8,
-            //int offsetToUniString = 8;
-            //handleName = Marshal.PtrToStringUni(new IntPtr(pStringBuffer.ToInt32() + offsetToUniString));
+            // (UNICODE_STRING.Length) + (UNICODE_STRING.MaxLength) + (IntPtr.Size) = offset
+            // 2 + 2 + 4 = 8,
+            int offsetToUniString = 8;
+            handleName = Marshal.PtrToStringUni(new IntPtr(pStringBuffer.ToInt32() + offsetToUniString));
 
             return handleName;
         }

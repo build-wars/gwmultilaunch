@@ -6,14 +6,14 @@ Open Source License: GPLv3
 Summary
 -------
 Launching multiple copies of Guild Wars.
-(no modifications to Guild Wars files needed!)
+(no modifications to Guild Wars files!)
 
 ------------
 Requirements
 ------------
 1) Guild Wars
 2) .NET Framework 2.0 or equivalent
-3) Windows XP, Vista and 7 may not work...
+3) Windows XP, Vista, or 7
 
 -----
 Usage
@@ -102,14 +102,20 @@ Contributors
 ------------
 IMKey@GuildWarsGuru
 
-Note: This software is GPL v3. It is open source so there are no questions 
-about the safety of this program. The source is available at the project url. 
-It is a C# solution for Visual Studio 2005.
+--------------
+Special Thanks
+--------------
+moriz - thank you for being the brave soul to test this in windows 7
 
 -------
 History
 -------
+Note: This software is GPL v3. It is open source so there are no questions 
+about the safety of this program. The source is available at the project url. 
+It is a C# solution for Visual Studio 2005.
 
 Date			Version		Note
 --------------------------------------------------------------------------------
+2009/05/12		v0.2a		Fixed registry key location issue for Win Vista/7
+							Fixed unicode conversion for Win7
 2009/05/09:     v0.1a		Initial Release
