@@ -14,5 +14,6 @@
 
 = Need help on =
   * Virtualize file access to gw.dat (no need to make multiple copies anymore)
-    * See http://69.10.233.10/KB/winsdk/MonitorWindowsFileSystem.aspx
     * Need to add hook into Guild Wars to intercept file opens, file writes, file reads, and file closes. Write operations should be committed to virtual file to prevent exclusive file lock on original gw.dat from occurring.
+    * See http://www.codeproject.com/KB/winsdk/MonitorWindowsFileSystem.aspx
+    * Also see http://www.codeproject.com/KB/system/hooksys.aspx
