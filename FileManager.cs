@@ -228,6 +228,18 @@ namespace GWMultiLaunch
                 if (value == string.Empty)
                 {
                     valueRead = false;      //nothing found, lets stop reading
+
+                    if (j == 0)
+                    {
+                        //try to at least add the path gw is installed to
+                        string gwPath = Form1.GetCurrentGuildWarsPath();
+                        string gwArg = Form1.DEFAULT_ARGUMENT;
+
+                        if (gwPath != string.Empty)
+                        {
+                            profiles.Profiles.Add(gwPath, gwArg);
+                        }
+                    }
                 }
                 else
                 {
