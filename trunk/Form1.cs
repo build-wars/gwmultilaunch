@@ -29,7 +29,7 @@ namespace GWMultiLaunch
     {
         #region Constants
 
-        private const string DEFAULT_ARGUMENT = "-windowed";
+        public const string DEFAULT_ARGUMENT = "-windowed";
         private const string MUTEX_MATCH_STRING = "AN-Mutex-Window";
         private const string GW_REG_LOCATION = "SOFTWARE\\ArenaNet\\Guild Wars";
 
@@ -259,9 +259,12 @@ namespace GWMultiLaunch
                 for (int i = 0; i < selectedInstalls.Length; i++)
                 {
                     selectedInstall = selectedInstalls[i];
+
+                    //check if the install exists
                     if (!File.Exists(selectedInstall))
                     {
                         MessageBox.Show("The path: " + selectedInstall + " does not exist!");
+                        continue;
                     }
 
                     //get current gw path from registry
@@ -270,12 +273,20 @@ namespace GWMultiLaunch
                     //set new gw path
                     SetRegistry(selectedInstall);
 
+                    //clear mutex
                     ClearMutex();
-                    LaunchGame(selectedInstall, mFileCloset.GetArgument(selectedInstall));
 
-                    //delay for defined valued in ini file
-                    //gives time for gw to catch the path for updating the right install
-                    System.Threading.Thread.Sleep(mFileCloset.RegistryCooldown);
+                    //attempt to launch
+                    if (!LaunchGame(selectedInstall, mFileCloset.GetArgument(selectedInstall)))
+                    {
+                        MessageBox.Show("Error launching: " + selectedInstall + "!", "GWMultiLaunch Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else
+                    {
+                        //delay for defined valued in ini file
+                        //gives time for gw to catch the path for updating the right install
+                        System.Threading.Thread.Sleep(mFileCloset.RegistryCooldown);
+                    }
 
                     //set back to saved path
                     Form1.SetRegistry(currentPath);

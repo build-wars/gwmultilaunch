@@ -17,6 +17,7 @@
 //along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.IO;
 using System.Windows.Forms;
 
 namespace GWMultiLaunch
@@ -34,31 +35,45 @@ namespace GWMultiLaunch
             if (args.Length >= 1)
             {
                 // Shortcut launching mode
-
-                //get current gw path from registry
-                string currentPath = Form1.GetCurrentGuildWarsPath();
-
-                //set new gw path
-                Form1.SetRegistry(args[0]);
-
-                //clear mutex
-                Form1.ClearMutex();
+                string pathToLaunch = args[0];
+                string pathArgs = string.Empty;
 
                 if (args.Length >= 2)
                 {
-                    Form1.LaunchGame(args[0], args[1]);
+                    pathArgs = args[1];
+                }
+
+                //validate path
+                if (!File.Exists(pathToLaunch))
+                {
+                    MessageBox.Show("The path: " + pathToLaunch + " does not exist! Check the shortcut arguments.","GWMultiLaunch Error",MessageBoxButtons.OK,MessageBoxIcon.Error);
                 }
                 else
                 {
-                    Form1.LaunchGame(args[0], string.Empty);
+                    //get current gw path from registry
+                    string currentPath = Form1.GetCurrentGuildWarsPath();
+
+                    //set new gw path
+                    Form1.SetRegistry(pathToLaunch);
+
+                    //clear mutex
+                    Form1.ClearMutex();
+
+                    //attempt to launch
+                    if (!Form1.LaunchGame(pathToLaunch, pathArgs))
+                    {
+                        MessageBox.Show("Error launching: " + pathToLaunch + "!", "GWMultiLaunch Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else
+                    {
+                        //delay for defined valued in ini file
+                        //gives time for gw to catch the path for updating the right install
+                        System.Threading.Thread.Sleep(fileCloset.RegistryCooldown);
+                    }
+
+                    //set back to saved path
+                    Form1.SetRegistry(currentPath);
                 }
-
-                //delay for defined valued in ini file
-                //gives time for gw to catch the path for updating the right install
-                System.Threading.Thread.Sleep(fileCloset.RegistryCooldown);
-
-                //set back to saved path
-                Form1.SetRegistry(currentPath);
 
                 Environment.Exit(0);
             }
