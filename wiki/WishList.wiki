@@ -6,6 +6,7 @@
   * ~~Detect the first Guild Wars install at first start~~
   * Detect whether a copy at a certain location has been launched already, do not attempt to relaunch same copy.
   * Speed up mutex killing for multiple gw processes
+  * Icons
 
 = Later =
   * Argument creation helper
