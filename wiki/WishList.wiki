@@ -10,6 +10,7 @@
 
 = Later =
   * Argument creation helper
+  * Drag-n-drop into list
   * Add button for making an extra copy of Guild Wars
     * See http://www.pinvoke.net/default.aspx/shell32/SHFileOperation.html
     * See http://msdn.microsoft.com/en-us/library/bb762164(VS.85).aspx
