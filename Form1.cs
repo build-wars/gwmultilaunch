@@ -32,6 +32,7 @@ namespace GWMultiLaunch
         public const string DEFAULT_ARGUMENT = "-windowed";
         private const string MUTEX_MATCH_STRING = "AN-Mutex-Window";
         private const string GW_REG_LOCATION = "SOFTWARE\\ArenaNet\\Guild Wars";
+        private const string GW_PROCESS_NAME = "Gw";
 
         #endregion
 
@@ -61,12 +62,12 @@ namespace GWMultiLaunch
             //get list of currently running system processes
             Process[] processList = Process.GetProcesses();
 
-            foreach (Process j in processList)
+            foreach (Process i in processList)
             {
                 //filter for guild wars ones
-                if (j.ProcessName.Equals("gw", StringComparison.OrdinalIgnoreCase))
+                if (i.ProcessName.Equals(GW_PROCESS_NAME, StringComparison.OrdinalIgnoreCase))
                 {
-                    if (HandleManager.KillHandle(j, MUTEX_MATCH_STRING))
+                    if (HandleManager.KillHandle(i, MUTEX_MATCH_STRING))
                     {
                         success = true;
                     }
@@ -141,9 +142,39 @@ namespace GWMultiLaunch
             }
         }
 
+        private static bool IsCopyRunning(string path)
+        {
+            //get list of currently running system processes
+            Process[] processList = Process.GetProcesses();
+
+            foreach (Process i in processList)
+            {
+                //does process name match?
+                if (i.ProcessName.Equals(GW_PROCESS_NAME, StringComparison.OrdinalIgnoreCase))
+                {
+                    string processPath = i.MainModule.FileName;
+
+                    //does filename match?
+                    if (processPath.Equals(path, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
         public static bool LaunchGame(string path, string args)
         {
             bool success = false;
+
+            //check to see if this copy is already started
+            if (IsCopyRunning(path))
+            {
+                MessageBox.Show(path + " is already running, please launch a different copy.", "GWMultiLaunch Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return success;
+            }
 
             Process gw = new Process();
             gw.StartInfo.FileName = path;
@@ -153,12 +184,17 @@ namespace GWMultiLaunch
 
             try
             {
+                //clear mutex to allow for another gw launch
+                ClearMutex();
+
+                //attempt to start gw process
                 gw.Start();
+                
                 success = true;
             }
             catch (Exception)
             {
-                return success;
+                MessageBox.Show("Error launching: " + path + "!", "GWMultiLaunch Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             return success;
@@ -166,19 +202,22 @@ namespace GWMultiLaunch
 
         private bool LaunchProgram(string path)
         {
+            bool success = false;
+
             Process prog = new Process();
             prog.StartInfo.FileName = path;
 
             try
             {
                 prog.Start();
-                return true;
+                success = true;
             }
             catch (Exception e)
             {
                 MessageBox.Show(e.Message);
-                return false;
             }
+
+            return success;
         }
 
         public static bool SetRegistry(string gwPath)
@@ -264,32 +303,27 @@ namespace GWMultiLaunch
                     if (!File.Exists(selectedInstall))
                     {
                         MessageBox.Show("The path: " + selectedInstall + " does not exist!");
-                        continue;
-                    }
 
-                    //get current gw path from registry
-                    string currentPath = Form1.GetCurrentGuildWarsPath();
-
-                    //set new gw path
-                    SetRegistry(selectedInstall);
-
-                    //clear mutex
-                    ClearMutex();
-
-                    //attempt to launch
-                    if (!LaunchGame(selectedInstall, mFileCloset.GetArgument(selectedInstall)))
-                    {
-                        MessageBox.Show("Error launching: " + selectedInstall + "!", "GWMultiLaunch Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                     else
                     {
-                        //delay for defined valued in ini file
-                        //gives time for gw to catch the path for updating the right install
-                        System.Threading.Thread.Sleep(mFileCloset.RegistryCooldown);
-                    }
+                        //get current gw path from registry
+                        string currentPath = Form1.GetCurrentGuildWarsPath();
 
-                    //set back to saved path
-                    Form1.SetRegistry(currentPath);
+                        //set new gw path
+                        SetRegistry(selectedInstall);
+
+                        //attempt to launch
+                        if (LaunchGame(selectedInstall, mFileCloset.GetArgument(selectedInstall)))
+                        {
+                            //delay for defined valued in ini file
+                            //gives time for gw to catch the path for updating the right install
+                            System.Threading.Thread.Sleep(mFileCloset.RegistryCooldown);
+                        }
+
+                        //set back to saved path
+                        Form1.SetRegistry(currentPath);
+                    }
                 }
             }
         }

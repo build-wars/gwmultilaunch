@@ -46,7 +46,7 @@ namespace GWMultiLaunch
                 //validate path
                 if (!File.Exists(pathToLaunch))
                 {
-                    MessageBox.Show("The path: " + pathToLaunch + " does not exist! Check the shortcut arguments.","GWMultiLaunch Error",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                    MessageBox.Show("The path: " + pathToLaunch + " does not exist! Check the shortcut arguments.", "GWMultiLaunch Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else
                 {
@@ -56,15 +56,8 @@ namespace GWMultiLaunch
                     //set new gw path
                     Form1.SetRegistry(pathToLaunch);
 
-                    //clear mutex
-                    Form1.ClearMutex();
-
                     //attempt to launch
-                    if (!Form1.LaunchGame(pathToLaunch, pathArgs))
-                    {
-                        MessageBox.Show("Error launching: " + pathToLaunch + "!", "GWMultiLaunch Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                    else
+                    if (Form1.LaunchGame(pathToLaunch, pathArgs))
                     {
                         //delay for defined valued in ini file
                         //gives time for gw to catch the path for updating the right install

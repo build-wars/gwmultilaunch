@@ -47,6 +47,7 @@ namespace GWMultiLaunch
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.profilesListBox = new System.Windows.Forms.ListBox();
             this.mutexButton = new System.Windows.Forms.Button();
             this.argumentsTextBox = new System.Windows.Forms.TextBox();
@@ -207,10 +208,11 @@ namespace GWMultiLaunch
             this.Controls.Add(this.addCopyButton);
             this.Controls.Add(this.argumentsTextBox);
             this.Controls.Add(this.profilesListBox);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(510, 354);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Guild Wars Multi-Launch (v0.2alpha)";
+            this.Text = "Guild Wars Multi-Launch (v0.3alpha)";
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();

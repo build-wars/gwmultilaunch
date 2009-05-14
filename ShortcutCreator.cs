@@ -46,7 +46,10 @@ namespace GWMultiLaunch
                 shortcut.Save();
                 success = true;
             }
-            catch (Exception) { }
+            catch (Exception e) 
+            {
+                System.Windows.Forms.MessageBox.Show(e.Message);
+            }
 
             return success;
         }
