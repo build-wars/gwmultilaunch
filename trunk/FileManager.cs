@@ -122,14 +122,7 @@ namespace GWMultiLaunch
 
         public void UpdateProfile(string pathToUpdate, string argument)
         {
-            try
-            {
-                mProfiles.Profiles[pathToUpdate] = argument;
-            }
-            catch (Exception)
-            {
-                //hmmm...
-            }
+            mProfiles.Profiles[pathToUpdate] = argument;
         }
 
         public void RemoveProfile(string pathToRemove)

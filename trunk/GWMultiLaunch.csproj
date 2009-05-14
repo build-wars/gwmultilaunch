@@ -26,6 +26,7 @@
     <GenerateManifests>false</GenerateManifests>
     <ExcludedPermissions>
     </ExcludedPermissions>
+    <ApplicationIcon>GWMultiLaunch.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -90,6 +91,7 @@
     <Compile Include="ShortcutCreator.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="GWMultiLaunch.ico" />
     <Content Include="license.txt" />
     <Content Include="readme.txt" />
   </ItemGroup>

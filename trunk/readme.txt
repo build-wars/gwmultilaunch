@@ -116,6 +116,9 @@ It is a C# solution for Visual Studio 2005.
 
 Date			Version		Note
 --------------------------------------------------------------------------------
+2009/05/xx		v0.3a		Detect initial copy of Guild Wars automatically
+							Error dialog on launching same copy of Guild Wars
+							Added icons
 2009/05/12		v0.2a		Fixed registry key location issue for Win Vista/7
 							Fixed unicode conversion for Win7
 2009/05/09:     v0.1a		Initial Release
