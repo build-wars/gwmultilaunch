@@ -9,6 +9,7 @@
 = Coming up =
   * Speed up mutex killing for multiple gw processes
   * Drag-n-drop into list
+    * See http://support.microsoft.com/kb/307966
 
 = Later =
   * Add button for making an extra copies of Guild Wars
