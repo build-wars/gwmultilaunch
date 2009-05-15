@@ -34,6 +34,9 @@ Concisely:
    or Hit Launch button to start Guild Wars
    (hint: possible to select multiple copies to launch at once)
 
+Guild Wars Updates: When there is an update, you will need to most likely launch a second time
+if you have multiple Guild Wars updating at the same time. See gw.dat question in the FAQ.
+
 Texmod Usage: Check the FAQ section.
 
 --------------
@@ -55,11 +58,9 @@ Open Texmod - attempts to locate Texmod and open
 Launch Sequence Details to bypass multiple process restriction
 --------------------------------------------------------------
 
-1) Save current gw path from registry
-2) Write new gw path to registry
+2) Set new gw path in registry
 3) Mutex cleared from all gw.exe processes
 4) Launch gw copy
-5) Write old gw path to registry (with delay)
 6) Exit GWMultiLaunch (only if using shortcut)
 
 ---
@@ -67,18 +68,17 @@ FAQ
 ---
 Q: Do I have to always use the launcher or the special shortcuts?
 A: No, you only need to use the launcher or shortcuts when you wish to launch 
-   multiple copies of Guild Wars. First copy can be launched however you like.
-
+   multiple copies of Guild Wars.
+   
 Q: Why do I get a "gw.dat is locked" message?
-A: Edit GWMultiLaunch.ini and increase the "regdelay" value. This value is in 
-   milliseconds. It determines how long the launcher gives the new gw instance 
-   to read the registry path before it is set back to the original path. The 
-   longer you set this, the longer you should wait between launching multiple 
-   gw sesssions.
+A: This is often the case if you launch the copy without setting the 
+   registry path properly. If you are planning to launch multiple
+   copies, the registry path must be set properly to avoid conflicts.
+   Gw.exe will always use the path found in the registry to locate gw.dat.
 
 Q: What is a Mutex?
 A: Simple answer, a flag that gw.exe puts up so new gw.exe processes know to 
-   not launch Long answer, check wikipedia.
+   not launch. Long answer, check wikipedia.
 
 Q: How do I use Texmod with this?
 A: If you only need one copy with Texmod helping, just launch that first via 
@@ -119,6 +119,8 @@ Date			Version		Note
 2009/05/xx		v0.3a		Detect initial copy of Guild Wars automatically
 							Error dialog on launching same copy of Guild Wars
 							Added icons
+							Took out registry path change back to be more
+							compatible with updates.
 2009/05/12		v0.2a		Fixed registry key location issue for Win Vista/7
 							Fixed unicode conversion for Win7
 2009/05/09:     v0.1a		Initial Release

@@ -121,4 +121,11 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <PostBuildEvent>if not exist "$(ProjectDir)GWMultiLaunch" mkdir "$(ProjectDir)GWMultiLaunch"
+copy "$(TargetDir)GWMultiLaunch.exe" "$(ProjectDir)GWMultiLaunch"
+copy "$(TargetDir)Interop.IWshRuntimeLibrary.dll" "$(ProjectDir)GWMultiLaunch"
+copy "$(ProjectDir)readme.txt" "$(ProjectDir)GWMultiLaunch"
+copy "$(ProjectDir)license.txt" "$(ProjectDir)GWMultiLaunch"</PostBuildEvent>
+  </PropertyGroup>
 </Project>
