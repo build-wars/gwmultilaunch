@@ -22,7 +22,7 @@ After these copies are made, add them to the list. Then, make the multi-launch e
 
 Concisely:
 
-  # Make copies of Guild Wars folder (just need gw.exe and gw.dat)
+  # Make copies of Guild Wars folder (only gw.exe and gw.dat is required)
   # Add the gw.exe(s) to the list
   # Click "Make Shortcut" and open the shortcut
     * or Hit Launch button to start Guild Wars
