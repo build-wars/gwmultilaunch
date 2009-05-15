@@ -54,6 +54,24 @@ namespace GWMultiLaunch
             return success;
         }
 
+        public static string GetShortcutTarget(string shortcutFile)
+        {
+            IWshShell shell = new WshShell();
+
+            IWshShortcut tmpShortcut = (IWshShortcut)shell.CreateShortcut(shortcutFile);
+
+            return tmpShortcut.TargetPath;
+        }
+
+        public static string GetShortcutArguments(string shortcutFile)
+        {
+            IWshShell shell = new WshShell();
+
+            IWshShortcut tmpShortcut = (IWshShortcut)shell.CreateShortcut(shortcutFile);
+
+            return tmpShortcut.Arguments;
+        }
+
         private static string GetUnusedShortcutPath()
         {
             string name = string.Empty;

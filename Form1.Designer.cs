@@ -65,6 +65,7 @@ namespace GWMultiLaunch
             // 
             // profilesListBox
             // 
+            this.profilesListBox.AllowDrop = true;
             this.profilesListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
@@ -74,6 +75,8 @@ namespace GWMultiLaunch
             this.profilesListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.profilesListBox.Size = new System.Drawing.Size(407, 199);
             this.profilesListBox.TabIndex = 0;
+            this.profilesListBox.DragEnter += new System.Windows.Forms.DragEventHandler(this.profilesListBox_DragEnter);
+            this.profilesListBox.DragDrop += new System.Windows.Forms.DragEventHandler(this.profilesListBox_DragDrop);
             this.profilesListBox.SelectedIndexChanged += new System.EventHandler(this.ProfilesListBox_SelectedIndexChanged);
             // 
             // mutexButton
