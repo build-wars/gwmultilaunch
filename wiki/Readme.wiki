@@ -52,6 +52,10 @@ Texmod Usage: Check the FAQ section.
 
 ==FAQ==
 
+Q: How do I uninstall?
+
+A: Just delete the folder and pertinent shortcuts. If you are going to delete additional copies of Guild Wars as well, it is recommended to set the registry path to the copy you are keeping before you delete.
+
 Q: Do I have to always use the launcher or the special shortcuts?
 
 A: No, you only need to use the launcher or shortcuts when you wish to launch multiple copies of Guild Wars.
