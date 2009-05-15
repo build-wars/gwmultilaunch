@@ -55,6 +55,32 @@ namespace GWMultiLaunch
             InitializeInstallList();
         }
 
+        private bool AddCopy(string pathToAdd)
+        {
+            return AddCopy(pathToAdd, DEFAULT_ARGUMENT);
+        }
+
+        private bool AddCopy(string pathToAdd, string pathArg)
+        {
+            bool success = false;
+
+            if (!profilesListBox.Items.Contains(pathToAdd))
+            {
+                //add to file
+                mFileCloset.AddProfile(pathToAdd, pathArg);
+
+                //add to list
+                int index = profilesListBox.Items.Add(pathToAdd);
+
+                //deselect all
+                profilesListBox.SelectedIndex = -1;
+
+                success = true;
+            }
+
+            return success;
+        }
+
         public static bool ClearMutex()
         {
             bool success = false;
@@ -261,17 +287,9 @@ namespace GWMultiLaunch
 
             if (dlg.ShowDialog() == DialogResult.OK)
             {
-                if (!profilesListBox.Items.Contains(dlg.FileName))
-                {
-                    //add to file
-                    mFileCloset.AddProfile(dlg.FileName, DEFAULT_ARGUMENT);
+                string pathToAdd = dlg.FileName;
 
-                    //add to list
-                    int index = profilesListBox.Items.Add(dlg.FileName);
-
-                    //deselect all
-                    profilesListBox.SelectedIndex = -1;
-                }
+                AddCopy(pathToAdd);
             }
         }
 
@@ -324,6 +342,45 @@ namespace GWMultiLaunch
         private void MutexButton_Click(object sender, EventArgs e)
         {
             ClearMutex();
+        }
+
+        private void profilesListBox_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] droppedFilenames = (string[])e.Data.GetData(DataFormats.FileDrop, false);
+
+            foreach (string filename in droppedFilenames)
+            {
+                string filePathToAdd = filename;
+                string arguments = string.Empty;
+                
+                string fileExt = Path.GetExtension(filePathToAdd);
+                if (fileExt.Equals(".lnk", StringComparison.OrdinalIgnoreCase))
+                {
+                    filePathToAdd = ShortcutCreator.GetShortcutTarget(filename);
+                    arguments = ShortcutCreator.GetShortcutArguments(filename).Trim();
+                }
+
+                if (arguments == string.Empty)
+                {
+                    AddCopy(filePathToAdd);
+                }
+                else
+                {
+                    AddCopy(filePathToAdd, arguments);
+                }
+            }
+        }
+
+        private void profilesListBox_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.All;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
         }
 
         private void ProfilesListBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -508,5 +565,7 @@ namespace GWMultiLaunch
         }
 
         #endregion
+
+        
     }
 }
