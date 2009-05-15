@@ -311,7 +311,11 @@ namespace GWMultiLaunch
                         SetRegistry(selectedInstall);
 
                         //attempt to launch
-                        LaunchGame(selectedInstall, mFileCloset.GetArgument(selectedInstall));
+                        if (LaunchGame(selectedInstall, mFileCloset.GetArgument(selectedInstall)))
+                        {
+                            //give time for gw to read value before it gets changed again.
+                            System.Threading.Thread.Sleep(mFileCloset.RegistryCooldown);
+                        }
                     }
                 }
             }
