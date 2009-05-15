@@ -307,22 +307,11 @@ namespace GWMultiLaunch
                     }
                     else
                     {
-                        //get current gw path from registry
-                        string currentPath = Form1.GetCurrentGuildWarsPath();
-
                         //set new gw path
                         SetRegistry(selectedInstall);
 
                         //attempt to launch
-                        if (LaunchGame(selectedInstall, mFileCloset.GetArgument(selectedInstall)))
-                        {
-                            //delay for defined valued in ini file
-                            //gives time for gw to catch the path for updating the right install
-                            System.Threading.Thread.Sleep(mFileCloset.RegistryCooldown);
-                        }
-
-                        //set back to saved path
-                        Form1.SetRegistry(currentPath);
+                        LaunchGame(selectedInstall, mFileCloset.GetArgument(selectedInstall));
                     }
                 }
             }
