@@ -55,7 +55,7 @@ Texmod Usage: Check the FAQ section.
 Q: Do I have to always use the launcher or the special shortcuts?
 
 A: No, you only need to use the launcher or shortcuts when you wish to launch multiple copies of Guild Wars.
-   
+
 Q: Why do I get a "gw.dat is locked" message?
 
 A: This is often the case if you launch the copy without setting the registry path properly. If you are planning to launch multiplecopies, the registry path must be set properly to avoid conflicts. Gw.exe will always use the path found in the registry to locate gw.dat.
