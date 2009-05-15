@@ -1,23 +1,23 @@
 #summary Wishlist for upcoming features.
 #labels Featured,Phase-Requirements,Phase-Design
 
-= Coming up =
-
+= Recently implemented =
   * ~~Detect the first Guild Wars install at first start~~
   * ~~Detect whether a copy at a certain location has been launched already, do not attempt to relaunch same copy.~~
-  * Speed up mutex killing for multiple gw processes
   * ~~Icons~~
 
-= Later =
-  * Argument creation helper
+= Coming up =
+  * Speed up mutex killing for multiple gw processes
   * Drag-n-drop into list
-  * Add button for making an extra copy of Guild Wars
+
+= Later =
+  * Add button for making an extra copies of Guild Wars
     * See http://www.pinvoke.net/default.aspx/shell32/SHFileOperation.html
     * See http://msdn.microsoft.com/en-us/library/bb762164(VS.85).aspx
     * See http://msdn.microsoft.com/en-us/magazine/cc163851.aspx
-  * Shortcut creation not dependent on windows scripting host dll
 
 = Need help on =
+  * Make shortcut creation not dependent on windows scripting host library
   * Virtualize file access to gw.dat (no need to make multiple copies anymore)
     * Need to add hook into Guild Wars to intercept file opens, file writes, file reads, and file closes. Write operations should be committed to virtual file to prevent exclusive file lock on original gw.dat from occurring.
     * See http://www.codeproject.com/KB/winsdk/MonitorWindowsFileSystem.aspx
