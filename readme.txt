@@ -76,16 +76,22 @@ A: This is often the case if you launch the copy without setting the
    copies, the registry path must be set properly to avoid conflicts.
    Gw.exe will always use the path found in the registry to locate gw.dat.
 
+Q: When I try to launch muliple copies at once through the launcher, not 
+   all of them launch. Why?
+A: The default delay between copies is current set to 3000 milliseconds in the
+   regdelay setting in your ini file. Increase this value for slower computers
+   since Guild Wars may need more time to read the value off the registry
+   before it is set to something else for the next copy.
+
 Q: What is a Mutex?
 A: Simple answer, a flag that gw.exe puts up so new gw.exe processes know to 
    not launch. Long answer, check wikipedia.
 
 Q: How do I use Texmod with this?
-A: If you only need one copy with Texmod helping, just launch that first via 
-   Texmod. Subsequent copies can be launched with the help of the launcher.
-   
-   To launch a Texmoded copy after a Guild Wars instance is already running:
+A: To launch a Texmoded copy:
    1) Select the copy you will be launching and click "Set Registry Path"
+      (the above step is important to ensure the Guild Wars copy you are
+      about to launch, locks on to its own right gw.dat file)
    2) Click "Clear Mutex"
    3) Open Texmod and launch the copy
 
