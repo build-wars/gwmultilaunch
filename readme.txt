@@ -116,7 +116,8 @@ It is a C# solution for Visual Studio 2005.
 
 Date			Version		Note
 --------------------------------------------------------------------------------
-2009/05/xx		v0.3a		Detect initial copy of Guild Wars automatically
+2009/05/14		v0.35a		Added delay back in when launching multiple copies
+2009/05/14		v0.3a		Detect initial copy of Guild Wars automatically
 							Error dialog on launching same copy of Guild Wars
 							Added icons
 							Took out registry path change back to be more

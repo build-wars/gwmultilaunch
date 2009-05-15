@@ -60,7 +60,7 @@ namespace GWMultiLaunch
         private const string OPTIONS_SECTION = "options";
         private const string TEXMOD_PATH_KEY = "texmodpath";
         private const string REG_DELAY_NAME = "regdelay";
-        private const int DEFAULT_REG_DELAY = 1000;
+        private const int DEFAULT_REG_DELAY = 3000;
 
         private const string PROFILES_SECTION = "profiles";
         private const string SELECTED_KEY_NAME = "selected";
