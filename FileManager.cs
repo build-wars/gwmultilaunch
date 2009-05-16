@@ -40,6 +40,10 @@ namespace GWMultiLaunch
         [DllImport("kernel32.dll")]
         private static extern bool WritePrivateProfileSection(string lpAppName,
            string lpString, string lpFileName);
+
+        [DllImport("kernel32.dll")]
+        public static extern bool QueryDosDevice(string lpDeviceName, 
+            [Out] StringBuilder lpTargetPath, uint ucchMax);
         
         #endregion
 

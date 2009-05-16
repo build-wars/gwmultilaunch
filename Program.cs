@@ -55,7 +55,7 @@ namespace GWMultiLaunch
                     Form1.SetRegistry(pathToLaunch);
 
                     //attempt to launch
-                    Form1.LaunchGame(pathToLaunch, pathArgs);
+                    Form1.LaunchGame(pathToLaunch, pathArgs, false);
                 }
 
                 Environment.Exit(0);

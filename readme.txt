@@ -43,6 +43,7 @@ Texmod Usage: Check the FAQ section.
   * Set Registry Path - path should be set before manually starting a specific install
   * Clear Mutex - closes the mutex handle under all live gw.exe processes
   * Open Texmod - attempts to locate Texmod and open
+  * Force gw.dat unlock - read warning message... useful if you are out of diskspace and need to desperately mule without extra copies
 
 ===Launch Sequence===
 
@@ -92,13 +93,13 @@ http://code.google.com/p/gwmultilaunch/
 
   * moriz - thank you for being the brave soul to test this in windows 7
   * Alexander Burn Victim - thank you for testing in vista 64-bit
-
+  * Aciid Bu5t0r - thank you for bringing up the idea of forcefully unlocking gw.dat
 
 ==History==
 v0.4b (2009/05/16)	
   * First beta. Feature lock for now. Only bugs fixes until first stable release.
   * Added ability to make copies of Guild Wars from the gui.
-  * Added super experimental "Force gw.dat unlock" for launching the same copy multiple times (warning, this may corrupt your gw.dat file)  
+  * Added super experimental "Force gw.dat unlock" for launching the same copy multiple times (gw.dat corruption possible)
   
 v0.35a (2009/05/14)	
   * Added delay back in when launching multiple copies
