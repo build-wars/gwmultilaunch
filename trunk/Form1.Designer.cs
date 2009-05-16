@@ -59,6 +59,7 @@ namespace GWMultiLaunch
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.removeCopyButton = new System.Windows.Forms.Button();
             this.shortcutButton = new System.Windows.Forms.Button();
+            this.makeCopyButton = new System.Windows.Forms.Button();
             this.launchButton = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -75,8 +76,8 @@ namespace GWMultiLaunch
             this.profilesListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.profilesListBox.Size = new System.Drawing.Size(407, 199);
             this.profilesListBox.TabIndex = 0;
-            this.profilesListBox.DragEnter += new System.Windows.Forms.DragEventHandler(this.profilesListBox_DragEnter);
-            this.profilesListBox.DragDrop += new System.Windows.Forms.DragEventHandler(this.profilesListBox_DragDrop);
+            this.profilesListBox.DragEnter += new System.Windows.Forms.DragEventHandler(this.ProfilesListBox_DragEnter);
+            this.profilesListBox.DragDrop += new System.Windows.Forms.DragEventHandler(this.ProfilesListBox_DragDrop);
             this.profilesListBox.SelectedIndexChanged += new System.EventHandler(this.ProfilesListBox_SelectedIndexChanged);
             // 
             // mutexButton
@@ -116,7 +117,7 @@ namespace GWMultiLaunch
             this.addCopyButton.BackColor = System.Drawing.SystemColors.Control;
             this.addCopyButton.Location = new System.Drawing.Point(430, 12);
             this.addCopyButton.Name = "addCopyButton";
-            this.addCopyButton.Size = new System.Drawing.Size(124, 60);
+            this.addCopyButton.Size = new System.Drawing.Size(124, 40);
             this.addCopyButton.TabIndex = 6;
             this.addCopyButton.Text = "Add";
             this.toolTip1.SetToolTip(this.addCopyButton, "Add a copy of Guild Wars to the list.");
@@ -162,9 +163,9 @@ namespace GWMultiLaunch
             this.removeCopyButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.removeCopyButton.BackColor = System.Drawing.SystemColors.Control;
             this.removeCopyButton.Enabled = false;
-            this.removeCopyButton.Location = new System.Drawing.Point(430, 78);
+            this.removeCopyButton.Location = new System.Drawing.Point(430, 55);
             this.removeCopyButton.Name = "removeCopyButton";
-            this.removeCopyButton.Size = new System.Drawing.Size(124, 60);
+            this.removeCopyButton.Size = new System.Drawing.Size(124, 40);
             this.removeCopyButton.TabIndex = 11;
             this.removeCopyButton.Text = "Remove";
             this.toolTip1.SetToolTip(this.removeCopyButton, "Remove selected copy from list.");
@@ -185,6 +186,20 @@ namespace GWMultiLaunch
             this.shortcutButton.UseVisualStyleBackColor = false;
             this.shortcutButton.Click += new System.EventHandler(this.ShortcutButton_Click);
             // 
+            // makeCopyButton
+            // 
+            this.makeCopyButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.makeCopyButton.BackColor = System.Drawing.SystemColors.Control;
+            this.makeCopyButton.Enabled = false;
+            this.makeCopyButton.Location = new System.Drawing.Point(430, 98);
+            this.makeCopyButton.Name = "makeCopyButton";
+            this.makeCopyButton.Size = new System.Drawing.Size(124, 40);
+            this.makeCopyButton.TabIndex = 14;
+            this.makeCopyButton.Text = "Make Copy";
+            this.toolTip1.SetToolTip(this.makeCopyButton, "Make a new copy.");
+            this.makeCopyButton.UseVisualStyleBackColor = false;
+            this.makeCopyButton.Click += new System.EventHandler(this.MakeCopyButton_Click);
+            // 
             // launchButton
             // 
             this.launchButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -203,6 +218,7 @@ namespace GWMultiLaunch
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(564, 327);
+            this.Controls.Add(this.makeCopyButton);
             this.Controls.Add(this.launchButton);
             this.Controls.Add(this.shortcutButton);
             this.Controls.Add(this.removeCopyButton);
@@ -215,7 +231,7 @@ namespace GWMultiLaunch
             this.MinimumSize = new System.Drawing.Size(510, 354);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Guild Wars Multi-Launch (v0.35alpha)";
+            this.Text = "Guild Wars Multi-Launch (v0.4 beta)";
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -236,6 +252,7 @@ namespace GWMultiLaunch
         private System.Windows.Forms.Button shortcutButton;
         private System.Windows.Forms.Button launchButton;
         private System.Windows.Forms.Button texmodButton;
+        private System.Windows.Forms.Button makeCopyButton;
     }
 }
 

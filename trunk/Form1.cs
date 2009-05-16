@@ -29,10 +29,13 @@ namespace GWMultiLaunch
     {
         #region Constants
 
-        public const string DEFAULT_ARGUMENT = "-windowed";
+        public const string DEFAULT_ARGUMENT = "-windowed"; 
+        public const string ERROR_CAPTION = "GWMultiLaunch Error";
         private const string MUTEX_MATCH_STRING = "AN-Mutex-Window";
         private const string GW_REG_LOCATION = "SOFTWARE\\ArenaNet\\Guild Wars";
         private const string GW_PROCESS_NAME = "Gw";
+        private const string GW_FILENAME = "Gw.exe";
+        
 
         #endregion
 
@@ -198,7 +201,8 @@ namespace GWMultiLaunch
             //check to see if this copy is already started
             if (IsCopyRunning(path))
             {
-                MessageBox.Show(path + " is already running, please launch a different copy.", "GWMultiLaunch Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(path + " is already running, please launch a different copy.", 
+                    ERROR_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return success;
             }
 
@@ -220,7 +224,8 @@ namespace GWMultiLaunch
             }
             catch (Exception)
             {
-                MessageBox.Show("Error launching: " + path + "!", "GWMultiLaunch Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error launching: " + path + "!", 
+                    ERROR_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             return success;
@@ -274,6 +279,18 @@ namespace GWMultiLaunch
             }
 
             return true;
+        }
+
+        private List<string> TranslateToDest(List<string> sourceFileList, string sourceFolder, string destFolder)
+        {
+            List<string> destFileList = new List<string>();
+
+            foreach (string filename in sourceFileList)
+            {
+                destFileList.Add(filename.Replace(sourceFolder, destFolder));
+            }
+
+            return destFileList;
         }
 
         #endregion
@@ -339,12 +356,96 @@ namespace GWMultiLaunch
             }
         }
 
+        private void MakeCopyButton_Click(object sender, EventArgs e)
+        {
+            string selectedInstall = GetSelectedInstall();
+
+            if (selectedInstall == String.Empty)
+            {
+                MessageBox.Show("No installation selected!");
+            }
+            else
+            {
+                FolderBrowserDialog selectFolderDlg = new FolderBrowserDialog();
+                selectFolderDlg.ShowNewFolderButton = true;
+                selectFolderDlg.Description = "Select an empty folder to copy to. (Hint: Click \"Make New Folder\" button.)";
+                selectFolderDlg.RootFolder = Environment.SpecialFolder.MyComputer;
+                selectFolderDlg.SelectedPath = Directory.GetParent(selectedInstall).Parent.FullName;
+
+                DialogResult result = selectFolderDlg.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    DialogResult confirm = MessageBox.Show("Are you sure you want to make a copy of Guild Wars at: " + 
+                        selectFolderDlg.SelectedPath + "?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                    if (confirm == DialogResult.Yes)
+                    {
+                        // lets attempt to make the copy
+                        bool copySuccess = MakeGWCopy(Directory.GetParent(selectedInstall).FullName, selectFolderDlg.SelectedPath);
+                        
+                        if (copySuccess)
+                        {
+                            // lets add the new copy to the profile list
+                            string gwPath = selectFolderDlg.SelectedPath + "\\" + GW_FILENAME;
+                            if (File.Exists(gwPath))
+                            {
+                                AddCopy(gwPath);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private bool MakeGWCopy(string sourceFolder, string destFolder)
+        {
+            bool success = false;
+
+            try
+            {
+                DirectoryInfo source = new DirectoryInfo(sourceFolder);
+                DirectoryInfo destination = new DirectoryInfo(destFolder);
+
+                if (source.FullName != destination.FullName)
+                {
+                    List<string> sourceFileList = new List<string>();
+                    List<string> destFileList = new List<string>();
+
+                    //include files in base directory
+                    sourceFileList.AddRange(Directory.GetFiles(sourceFolder, "*.*", SearchOption.TopDirectoryOnly));
+
+                    //include files in templates folder
+                    string templateDir = sourceFolder + "\\Templates";
+                    sourceFileList.AddRange(Directory.GetFiles(templateDir, "*.*", SearchOption.AllDirectories));
+
+                    //translate to destination paths
+                    destFileList = TranslateToDest(sourceFileList, sourceFolder, destFolder);
+
+                    //translate string array to single string
+                    string from = FileCopier.TranslateStringList(sourceFileList);
+                    string to = FileCopier.TranslateStringList(destFileList);
+
+                    //lets do the copying
+                    success = FileCopier.CopyFiles(from, to);
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Error occurred while copying Guild Wars from "
+                    + sourceFolder + " to " + destFolder + "!", ERROR_CAPTION, 
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                success = false;
+            }
+
+            return success;
+        }
+
         private void MutexButton_Click(object sender, EventArgs e)
         {
             ClearMutex();
         }
 
-        private void profilesListBox_DragDrop(object sender, DragEventArgs e)
+        private void ProfilesListBox_DragDrop(object sender, DragEventArgs e)
         {
             string[] droppedFilenames = (string[])e.Data.GetData(DataFormats.FileDrop, false);
 
@@ -371,7 +472,7 @@ namespace GWMultiLaunch
             }
         }
 
-        private void profilesListBox_DragEnter(object sender, DragEventArgs e)
+        private void ProfilesListBox_DragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
@@ -401,6 +502,7 @@ namespace GWMultiLaunch
 
                 regButton.Enabled = false;
                 removeCopyButton.Enabled = true;
+                makeCopyButton.Enabled = false;
                 launchButton.Enabled = true;
                 shortcutButton.Enabled = true;
 
@@ -417,6 +519,7 @@ namespace GWMultiLaunch
 
                 regButton.Enabled = true;
                 removeCopyButton.Enabled = true;
+                makeCopyButton.Enabled = true;
                 launchButton.Enabled = true;
                 shortcutButton.Enabled = true;
 
@@ -430,6 +533,7 @@ namespace GWMultiLaunch
 
                 regButton.Enabled = false;
                 removeCopyButton.Enabled = false;
+                makeCopyButton.Enabled = false;
                 launchButton.Enabled = false;
                 shortcutButton.Enabled = false;
 
