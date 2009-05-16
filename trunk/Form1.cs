@@ -29,13 +29,13 @@ namespace GWMultiLaunch
     {
         #region Constants
 
-        public const string DEFAULT_ARGUMENT = "-windowed"; 
+        public const string DEFAULT_ARGUMENT = "-windowed";
         public const string ERROR_CAPTION = "GWMultiLaunch Error";
         private const string MUTEX_MATCH_STRING = "AN-Mutex-Window";
         private const string GW_REG_LOCATION = "SOFTWARE\\ArenaNet\\Guild Wars";
         private const string GW_PROCESS_NAME = "Gw";
         private const string GW_FILENAME = "Gw.exe";
-        
+        private const string GW_DAT = "Gw.dat";
 
         #endregion
 
@@ -79,6 +79,41 @@ namespace GWMultiLaunch
                 profilesListBox.SelectedIndex = -1;
 
                 success = true;
+            }
+
+            return success;
+        }
+
+        public static bool ClearFileLock(string basePath)
+        {
+            bool success = false;
+
+            string root = Directory.GetDirectoryRoot(basePath).Substring(0, 2);
+            uint size = 256;
+            System.Text.StringBuilder volumeName = new System.Text.StringBuilder((int)size);
+
+            //get nt volume name
+            bool vnFound = FileManager.QueryDosDevice(root, volumeName, size);
+
+            if (vnFound)
+            {
+                basePath = basePath.Replace(root, volumeName.ToString());
+                string fileToUnlock = basePath + "\\" + GW_DAT;
+
+                //get list of currently running system processes
+                Process[] processList = Process.GetProcesses();
+
+                foreach (Process i in processList)
+                {
+                    //filter for guild wars ones
+                    if (i.ProcessName.Equals(GW_PROCESS_NAME, StringComparison.OrdinalIgnoreCase))
+                    {
+                        if (HandleManager.KillHandle(i, fileToUnlock))
+                        {
+                            success = true;
+                        }
+                    }
+                }
             }
 
             return success;
@@ -157,7 +192,7 @@ namespace GWMultiLaunch
         }
 
         private void InitializeInstallList()
-        { 
+        {
             //Populate listbox with installs
             foreach (KeyValuePair<string, string> i in mFileCloset.Profiles)
             {
@@ -194,16 +229,19 @@ namespace GWMultiLaunch
             return false;
         }
 
-        public static bool LaunchGame(string path, string args)
+        public static bool LaunchGame(string path, string args, bool forced)
         {
             bool success = false;
 
-            //check to see if this copy is already started
-            if (IsCopyRunning(path))
+            if (!forced)
             {
-                MessageBox.Show(path + " is already running, please launch a different copy.", 
-                    ERROR_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return success;
+                //check to see if this copy is already started
+                if (IsCopyRunning(path))
+                {
+                    MessageBox.Show(path + " is already running, please launch a different copy.",
+                        ERROR_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return success;
+                }
             }
 
             Process gw = new Process();
@@ -219,12 +257,12 @@ namespace GWMultiLaunch
 
                 //attempt to start gw process
                 gw.Start();
-                
+
                 success = true;
             }
             catch (Exception)
             {
-                MessageBox.Show("Error launching: " + path + "!", 
+                MessageBox.Show("Error launching: " + path + "!",
                     ERROR_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
@@ -345,8 +383,15 @@ namespace GWMultiLaunch
                         //set new gw path
                         SetRegistry(selectedInstall);
 
+                        bool forced = false;
+                        if (forceLaunchCheckBox.Checked)
+                        {
+                            ClearFileLock(Directory.GetParent(selectedInstall).FullName);
+                            forced = true;
+                        }
+
                         //attempt to launch
-                        if (LaunchGame(selectedInstall, mFileCloset.GetArgument(selectedInstall)))
+                        if (LaunchGame(selectedInstall, mFileCloset.GetArgument(selectedInstall), forced))
                         {
                             //give time for gw to read value before it gets changed again.
                             System.Threading.Thread.Sleep(mFileCloset.RegistryCooldown);
@@ -375,14 +420,14 @@ namespace GWMultiLaunch
                 DialogResult result = selectFolderDlg.ShowDialog();
                 if (result == DialogResult.OK)
                 {
-                    DialogResult confirm = MessageBox.Show("Are you sure you want to make a copy of Guild Wars at: " + 
+                    DialogResult confirm = MessageBox.Show("Are you sure you want to make a copy of Guild Wars at: " +
                         selectFolderDlg.SelectedPath + "?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                     if (confirm == DialogResult.Yes)
                     {
                         // lets attempt to make the copy
                         bool copySuccess = MakeGWCopy(Directory.GetParent(selectedInstall).FullName, selectFolderDlg.SelectedPath);
-                        
+
                         if (copySuccess)
                         {
                             // lets add the new copy to the profile list
@@ -432,7 +477,7 @@ namespace GWMultiLaunch
             catch (Exception)
             {
                 MessageBox.Show("Error occurred while copying Guild Wars from "
-                    + sourceFolder + " to " + destFolder + "!", ERROR_CAPTION, 
+                    + sourceFolder + " to " + destFolder + "!", ERROR_CAPTION,
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 success = false;
             }
@@ -453,7 +498,7 @@ namespace GWMultiLaunch
             {
                 string filePathToAdd = filename;
                 string arguments = string.Empty;
-                
+
                 string fileExt = Path.GetExtension(filePathToAdd);
                 if (fileExt.Equals(".lnk", StringComparison.OrdinalIgnoreCase))
                 {
@@ -627,7 +672,7 @@ namespace GWMultiLaunch
                             texmodPath = texmodFiles[0];    //use first match
                         }
                     }
-                    catch (Exception) 
+                    catch (Exception)
                     {
                         texmodPath = string.Empty;
                     }
@@ -670,6 +715,25 @@ namespace GWMultiLaunch
 
         #endregion
 
-        
+        private void ForceLaunchCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (forceLaunchCheckBox.Checked)
+            {
+                DialogResult t = MessageBox.Show("This option is very experimental! Forcing an unlock may corrupt gw.dat. \n" +
+                    "Guild Wars may crash. Only do a forced launch after first copy has an area loaded. (item art including)\n" +
+                    "Any graphics or text that have not been loaded into memory will not show up once gw.dat is detached.\n" +
+                    "Use this option if you want to mule between characters in your guild hall and you do not\n" +
+                    "have the disk space to make an extra copy of Guild Wars.\n\n" +
+                    "Are you sure you want to enable this option?",
+                    "Experimental Option!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                if (t == DialogResult.No)
+                {
+                    forceLaunchCheckBox.Checked = false;
+                }
+            }
+        }
+
+
     }
 }

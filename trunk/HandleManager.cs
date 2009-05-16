@@ -316,10 +316,10 @@ namespace GWMultiLaunch
         private static string GetHandleName(SYSTEM_HANDLE_INFORMATION targetHandleInfo, int hProcess)
         {
             //skip special NamedPipe handle (this causes hang up with NtQueryObject function)
-            if (targetHandleInfo.AccessMask == 0x0012019F)
-            {
-                return String.Empty;
-            }
+            //if (targetHandleInfo.AccessMask == 0x0012019F)
+            //{
+            //    return String.Empty;
+            //}
 
             int thisProcess = GetCurrentProcess();
             int handle;
@@ -370,7 +370,7 @@ namespace GWMultiLaunch
             // If the handle has an empty name, we still need to give the buffer a size to map the UNICODE_STRING struct to.
             if (objInfo.NameInformationLength == 0)
             {
-                return 0x10;    //16 bytes should be plenty buffer space for an empty OBJECT_NAME_INFORMATION struct
+                return 0x100;    //reserve 256 bytes, since nameinfolength = 0 for filenames
             }
             else
             {
