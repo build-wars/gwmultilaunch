@@ -198,7 +198,7 @@ namespace GWMultiLaunch
             this.shortcutButton.Size = new System.Drawing.Size(124, 84);
             this.shortcutButton.TabIndex = 12;
             this.shortcutButton.Text = "Make Shortcut";
-            this.toolTip1.SetToolTip(this.shortcutButton, "Make MultiLaunch Enabled Desktop Shortcut");
+            this.toolTip1.SetToolTip(this.shortcutButton, "Make multi-launch enabled desktop shortcut.");
             this.shortcutButton.UseVisualStyleBackColor = false;
             this.shortcutButton.Click += new System.EventHandler(this.ShortcutButton_Click);
             // 
