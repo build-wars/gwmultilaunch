@@ -46,7 +46,8 @@ namespace GWMultiLaunch
                 //validate path
                 if (!File.Exists(pathToLaunch))
                 {
-                    MessageBox.Show("The path: " + pathToLaunch + " does not exist! Check the shortcut arguments.", "GWMultiLaunch Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("The path: " + pathToLaunch + " does not exist! Check the shortcut arguments.", 
+                        Form1.ERROR_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else
                 {

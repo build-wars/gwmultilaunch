@@ -34,6 +34,7 @@ Texmod Usage: Check the FAQ section.
 
   * Add - add the location of an existing copy
   * Remove - remove selected copy from list
+  * Make Copy - make a copy (make sure to create new folder in dialog)
   * Launch - start the selected copies
   * Make Desktop Shortcut - add a desktop shortcut to launch selected copy
 
@@ -94,7 +95,11 @@ http://code.google.com/p/gwmultilaunch/
 
 
 ==History==
-
+v0.4b (2009/05/16)	
+  * First beta. Feature lock for now. Only bugs fixes until first stable release.
+  * Added ability to make copies of Guild Wars from the gui.
+  * Added super experimental "Force gw.dat unlock" for launching the same copy multiple times (warning, this may corrupt your gw.dat file)  
+  
 v0.35a (2009/05/14)	
   * Added delay back in when launching multiple copies
 
