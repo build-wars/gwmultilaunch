@@ -7,10 +7,7 @@
   * ~~Icons~~
 
 = Coming up =
-  * Speed up mutex killing for multiple gw processes
   * ~~Drag-n-drop into list~~
-
-= Later =
   * Add button for making an extra copies of Guild Wars
     * See http://www.pinvoke.net/default.aspx/shell32/SHFileOperation.html
     * See http://msdn.microsoft.com/en-us/library/bb762164(VS.85).aspx
