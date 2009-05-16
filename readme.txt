@@ -15,7 +15,7 @@ Launching multiple copies of Guild Wars.
 
 ==Usage==
 
-Copies of the Guild Wars folder need to be made beforehand. The number of copies depends on how many copies you would like to have open at once. Most likely, you will only need to make 1 extra copy to be able to run two copies side by side.
+Copies of the Guild Wars folder need to be made. The number of copies depends on how many copies you would like to have open at once. You will only need to make 1 extra copy to be able to run two copies side by side.
 
 After these copies are made, add them to the list. Then, make the multi-launch enabled shortcuts which are good for launching multiple copies of Guild Wars. Or just select the game and launch it from the gui.
 
@@ -23,8 +23,9 @@ Concisely:
 
   # Make copies of Guild Wars folder (just need gw.exe and gw.dat)
   # Add the gw.exe(s) to the list
-  # Click "Make Shortcut" and open the shortcut
-    * or Hit Launch button to start Guild Wars
+  # Double click item to launch
+    * or click "Launch" button
+    * or make a shortcut for external launching
 
 Guild Wars Updates: When there is an update, you will need to launch a second time if you have multiple Guild Wars updating at the same time. See gw.dat question in the FAQ for details.
 
@@ -96,6 +97,9 @@ http://code.google.com/p/gwmultilaunch/
   * Aciid Bu5t0r - thank you for bringing up the idea of forcefully unlocking gw.dat
 
 ==History==
+v0.42b (2009/05/16)
+  * Fixed "Make Copy" issue with Template folders not being found under Guild Wars folder
+  
 v0.4b (2009/05/16)	
   * First beta. Feature lock for now. Only bugs fixes until first stable release.
   * Added ability to drag and drop into list of copies
