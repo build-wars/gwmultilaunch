@@ -22,7 +22,7 @@ After these copies are made, add them to the list. Then, make the multi-launch e
 
 Concisely:
 
-  # Make copies of Guild Wars folder (only gw.exe and gw.dat is required)
+  # Make copies of Guild Wars folder (just need gw.exe and gw.dat)
   # Add the gw.exe(s) to the list
   # Click "Make Shortcut" and open the shortcut
     * or Hit Launch button to start Guild Wars
@@ -35,6 +35,7 @@ Texmod Usage: Check the FAQ section.
 
   * Add - add the location of an existing copy
   * Remove - remove selected copy from list
+  * Make Copy - make a copy (make sure to create new folder in dialog)
   * Launch - start the selected copies
   * Make Desktop Shortcut - add a desktop shortcut to launch selected copy
 
@@ -43,6 +44,7 @@ Texmod Usage: Check the FAQ section.
   * Set Registry Path - path should be set before manually starting a specific install
   * Clear Mutex - closes the mutex handle under all live gw.exe processes
   * Open Texmod - attempts to locate Texmod and open
+  * Force gw.dat unlock - read warning message... useful if you are out of diskspace and need to desperately mule without extra copies
 
 ===Launch Sequence===
 
@@ -51,10 +53,6 @@ Texmod Usage: Check the FAQ section.
   # Launch gw copy
 
 ==FAQ==
-
-Q: How do I uninstall?
-
-A: Just delete the folder and pertinent shortcuts. If you are going to delete additional copies of Guild Wars as well, it is recommended to set the registry path to the copy you are keeping before you delete.
 
 Q: Do I have to always use the launcher or the special shortcuts?
 
@@ -96,10 +94,15 @@ http://code.google.com/p/gwmultilaunch/
 
   * moriz - thank you for being the brave soul to test this in windows 7
   * Alexander Burn Victim - thank you for testing in vista 64-bit
-
+  * Aciid Bu5t0r - thank you for bringing up the idea of forcefully unlocking gw.dat
 
 ==History==
-
+v0.4b (2009/05/16)	
+  * First beta. Feature lock for now. Only bugs fixes until first stable release.
+  * Added ability to drag and drop into list of copies
+  * Added ability to make copies of Guild Wars from the gui.
+  * Added super experimental "Force gw.dat unlock" for launching the same copy multiple times (gw.dat corruption possible)
+  
 v0.35a (2009/05/14)	
   * Added delay back in when launching multiple copies
 
