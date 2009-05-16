@@ -55,13 +55,13 @@ namespace GWMultiLaunch
             this.addCopyButton = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.forceLaunchCheckBox = new System.Windows.Forms.CheckBox();
             this.texmodButton = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.removeCopyButton = new System.Windows.Forms.Button();
             this.shortcutButton = new System.Windows.Forms.Button();
             this.makeCopyButton = new System.Windows.Forms.Button();
             this.launchButton = new System.Windows.Forms.Button();
-            this.forceLaunchCheckBox = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -75,7 +75,7 @@ namespace GWMultiLaunch
             this.profilesListBox.Location = new System.Drawing.Point(12, 12);
             this.profilesListBox.Name = "profilesListBox";
             this.profilesListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.profilesListBox.Size = new System.Drawing.Size(407, 186);
+            this.profilesListBox.Size = new System.Drawing.Size(405, 173);
             this.profilesListBox.TabIndex = 0;
             this.profilesListBox.DragEnter += new System.Windows.Forms.DragEventHandler(this.ProfilesListBox_DragEnter);
             this.profilesListBox.DragDrop += new System.Windows.Forms.DragEventHandler(this.ProfilesListBox_DragDrop);
@@ -95,9 +95,9 @@ namespace GWMultiLaunch
             // 
             this.argumentsTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.argumentsTextBox.Location = new System.Drawing.Point(114, 204);
+            this.argumentsTextBox.Location = new System.Drawing.Point(114, 202);
             this.argumentsTextBox.Name = "argumentsTextBox";
-            this.argumentsTextBox.Size = new System.Drawing.Size(305, 20);
+            this.argumentsTextBox.Size = new System.Drawing.Size(303, 20);
             this.argumentsTextBox.TabIndex = 3;
             this.argumentsTextBox.Leave += new System.EventHandler(this.ArgumentsTextBox_Leave);
             // 
@@ -116,7 +116,7 @@ namespace GWMultiLaunch
             // 
             this.addCopyButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.addCopyButton.BackColor = System.Drawing.SystemColors.Control;
-            this.addCopyButton.Location = new System.Drawing.Point(430, 12);
+            this.addCopyButton.Location = new System.Drawing.Point(428, 12);
             this.addCopyButton.Name = "addCopyButton";
             this.addCopyButton.Size = new System.Drawing.Size(124, 40);
             this.addCopyButton.TabIndex = 6;
@@ -129,7 +129,7 @@ namespace GWMultiLaunch
             // 
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 207);
+            this.label2.Location = new System.Drawing.Point(12, 205);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(96, 13);
             this.label2.TabIndex = 9;
@@ -143,12 +143,23 @@ namespace GWMultiLaunch
             this.groupBox1.Controls.Add(this.texmodButton);
             this.groupBox1.Controls.Add(this.regButton);
             this.groupBox1.Controls.Add(this.mutexButton);
-            this.groupBox1.Location = new System.Drawing.Point(12, 230);
+            this.groupBox1.Location = new System.Drawing.Point(12, 228);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(407, 90);
+            this.groupBox1.Size = new System.Drawing.Size(405, 90);
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Expert Controls";
+            // 
+            // forceLaunchCheckBox
+            // 
+            this.forceLaunchCheckBox.AutoSize = true;
+            this.forceLaunchCheckBox.Location = new System.Drawing.Point(6, 65);
+            this.forceLaunchCheckBox.Name = "forceLaunchCheckBox";
+            this.forceLaunchCheckBox.Size = new System.Drawing.Size(372, 17);
+            this.forceLaunchCheckBox.TabIndex = 6;
+            this.forceLaunchCheckBox.Text = "Force gw.dat unlock. Enable multi-launching of same copy. (experimental)";
+            this.forceLaunchCheckBox.UseVisualStyleBackColor = true;
+            this.forceLaunchCheckBox.CheckedChanged += new System.EventHandler(this.ForceLaunchCheckBox_CheckedChanged);
             // 
             // texmodButton
             // 
@@ -165,7 +176,7 @@ namespace GWMultiLaunch
             this.removeCopyButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.removeCopyButton.BackColor = System.Drawing.SystemColors.Control;
             this.removeCopyButton.Enabled = false;
-            this.removeCopyButton.Location = new System.Drawing.Point(430, 55);
+            this.removeCopyButton.Location = new System.Drawing.Point(428, 55);
             this.removeCopyButton.Name = "removeCopyButton";
             this.removeCopyButton.Size = new System.Drawing.Size(124, 40);
             this.removeCopyButton.TabIndex = 11;
@@ -179,7 +190,7 @@ namespace GWMultiLaunch
             this.shortcutButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.shortcutButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.shortcutButton.Enabled = false;
-            this.shortcutButton.Location = new System.Drawing.Point(430, 250);
+            this.shortcutButton.Location = new System.Drawing.Point(428, 248);
             this.shortcutButton.Name = "shortcutButton";
             this.shortcutButton.Size = new System.Drawing.Size(124, 70);
             this.shortcutButton.TabIndex = 12;
@@ -193,7 +204,7 @@ namespace GWMultiLaunch
             this.makeCopyButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.makeCopyButton.BackColor = System.Drawing.SystemColors.Control;
             this.makeCopyButton.Enabled = false;
-            this.makeCopyButton.Location = new System.Drawing.Point(430, 98);
+            this.makeCopyButton.Location = new System.Drawing.Point(428, 98);
             this.makeCopyButton.Name = "makeCopyButton";
             this.makeCopyButton.Size = new System.Drawing.Size(124, 40);
             this.makeCopyButton.TabIndex = 14;
@@ -207,7 +218,7 @@ namespace GWMultiLaunch
             this.launchButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.launchButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.launchButton.Enabled = false;
-            this.launchButton.Location = new System.Drawing.Point(430, 144);
+            this.launchButton.Location = new System.Drawing.Point(428, 144);
             this.launchButton.Name = "launchButton";
             this.launchButton.Size = new System.Drawing.Size(124, 80);
             this.launchButton.TabIndex = 13;
@@ -215,22 +226,11 @@ namespace GWMultiLaunch
             this.launchButton.UseVisualStyleBackColor = false;
             this.launchButton.Click += new System.EventHandler(this.LaunchButton_Click);
             // 
-            // forceLaunchCheckBox
-            // 
-            this.forceLaunchCheckBox.AutoSize = true;
-            this.forceLaunchCheckBox.Location = new System.Drawing.Point(6, 65);
-            this.forceLaunchCheckBox.Name = "forceLaunchCheckBox";
-            this.forceLaunchCheckBox.Size = new System.Drawing.Size(372, 17);
-            this.forceLaunchCheckBox.TabIndex = 6;
-            this.forceLaunchCheckBox.Text = "Force gw.dat unlock. Enable multi-launching of same copy. (experimental)";
-            this.forceLaunchCheckBox.UseVisualStyleBackColor = true;
-            this.forceLaunchCheckBox.CheckedChanged += new System.EventHandler(this.ForceLaunchCheckBox_CheckedChanged);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(564, 327);
+            this.ClientSize = new System.Drawing.Size(562, 325);
             this.Controls.Add(this.makeCopyButton);
             this.Controls.Add(this.launchButton);
             this.Controls.Add(this.shortcutButton);
