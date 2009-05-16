@@ -5,13 +5,8 @@
   * ~~Detect the first Guild Wars install at first start~~
   * ~~Detect whether a copy at a certain location has been launched already, do not attempt to relaunch same copy.~~
   * ~~Icons~~
-
-= Coming up =
   * ~~Drag-n-drop into list~~
-  * Add button for making an extra copies of Guild Wars
-    * See http://www.pinvoke.net/default.aspx/shell32/SHFileOperation.html
-    * See http://msdn.microsoft.com/en-us/library/bb762164(VS.85).aspx
-    * See http://msdn.microsoft.com/en-us/magazine/cc163851.aspx
+  * ~~Add button for making an extra copies of Guild Wars~~
 
 = Need help on =
   * Make shortcut creation not dependent on windows scripting host library
