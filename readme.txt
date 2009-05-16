@@ -98,6 +98,7 @@ http://code.google.com/p/gwmultilaunch/
 ==History==
 v0.4b (2009/05/16)	
   * First beta. Feature lock for now. Only bugs fixes until first stable release.
+  * Added ability to drag and drop into list of copies
   * Added ability to make copies of Guild Wars from the gui.
   * Added super experimental "Force gw.dat unlock" for launching the same copy multiple times (gw.dat corruption possible)
   
