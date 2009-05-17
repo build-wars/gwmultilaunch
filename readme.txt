@@ -97,6 +97,9 @@ http://code.google.com/p/gwmultilaunch/
   * Aciid Bu5t0r - thank you for bringing up the idea of forcefully unlocking gw.dat
 
 ==History==
+v0.45b (2009/05/17)
+  * Fixed bug introduced with implementing gw.dat unlocking affecting normal operations in Vista 64-bit
+  
 v0.42b (2009/05/16)
   * Fixed "Make Copy" issue with Template folders not being found under Guild Wars folder
   

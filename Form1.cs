@@ -89,30 +89,23 @@ namespace GWMultiLaunch
         {
             bool success = false;
 
+            //take off the drive portion due to limitation in how killhandle works for file name
             string root = Directory.GetDirectoryRoot(basePath).Substring(0, 2);
-            uint size = 256;
-            System.Text.StringBuilder volumeName = new System.Text.StringBuilder((int)size);
+            basePath = basePath.Replace(root, string.Empty);
 
-            //get nt volume name
-            bool vnFound = FileManager.QueryDosDevice(root, volumeName, size);
+            string fileToUnlock = basePath + "\\" + GW_DAT;
 
-            if (vnFound)
+            //get list of currently running system processes
+            Process[] processList = Process.GetProcesses();
+
+            foreach (Process i in processList)
             {
-                basePath = basePath.Replace(root, volumeName.ToString());
-                string fileToUnlock = basePath + "\\" + GW_DAT;
-
-                //get list of currently running system processes
-                Process[] processList = Process.GetProcesses();
-
-                foreach (Process i in processList)
+                //filter for guild wars ones
+                if (i.ProcessName.Equals(GW_PROCESS_NAME, StringComparison.OrdinalIgnoreCase))
                 {
-                    //filter for guild wars ones
-                    if (i.ProcessName.Equals(GW_PROCESS_NAME, StringComparison.OrdinalIgnoreCase))
+                    if (HandleManager.KillHandle(i, fileToUnlock, true))
                     {
-                        if (HandleManager.KillHandle(i, fileToUnlock))
-                        {
-                            success = true;
-                        }
+                        success = true;
                     }
                 }
             }
@@ -132,7 +125,7 @@ namespace GWMultiLaunch
                 //filter for guild wars ones
                 if (i.ProcessName.Equals(GW_PROCESS_NAME, StringComparison.OrdinalIgnoreCase))
                 {
-                    if (HandleManager.KillHandle(i, MUTEX_MATCH_STRING))
+                    if (HandleManager.KillHandle(i, MUTEX_MATCH_STRING, false))
                     {
                         success = true;
                     }
@@ -217,12 +210,19 @@ namespace GWMultiLaunch
                 //does process name match?
                 if (i.ProcessName.Equals(GW_PROCESS_NAME, StringComparison.OrdinalIgnoreCase))
                 {
-                    string processPath = i.MainModule.FileName;
-
-                    //does filename match?
-                    if (processPath.Equals(path, StringComparison.OrdinalIgnoreCase))
+                    try
                     {
-                        return true;
+                        string processPath = i.MainModule.FileName;
+
+                        //does filename match?
+                        if (processPath.Equals(path, StringComparison.OrdinalIgnoreCase))
+                        {
+                            return true;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        //Exception is caught if gw.exe is in the process of closing itself
                     }
                 }
             }

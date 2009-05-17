@@ -44,6 +44,11 @@ namespace GWMultiLaunch
         [DllImport("kernel32.dll")]
         private static extern int OpenProcess(ProcessAccessFlags dwDesiredAccess, [MarshalAs(UnmanagedType.Bool)] bool bInheritHandle, UInt32 dwProcessID);
 
+        [DllImport("ntdll.dll", SetLastError = true)]
+        private static extern NTSTATUS NtQueryInformationFile(int FileHandle,
+            ref IO_STATUS_BLOCK IoStatusBlock, IntPtr FileInformation, int FileInformationLength, 
+            FILE_INFORMATION_CLASS FileInformationClass);
+
         [DllImport("ntdll.dll")]
         private static extern NTSTATUS NtQueryObject(int ObjectHandle, OBJECT_INFORMATION_CLASS ObjectInformationClass, 
             IntPtr ObjectInformation, int ObjectInformationLength, out int ReturnLength);
@@ -84,6 +89,14 @@ namespace GWMultiLaunch
             public UInt32 SecurityDescriptorLength;
             public System.Runtime.InteropServices.ComTypes.FILETIME CreateTime;
         }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct IO_STATUS_BLOCK
+        {
+            public UInt32 Status;
+            public UInt64 Information;
+        }
+
 
         ////Not required, for reference
         //[StructLayout(LayoutKind.Sequential)]
@@ -155,6 +168,13 @@ namespace GWMultiLaunch
             SystemHandleInformation = 16
         } //partial enum, actual set is huge, google SYSTEM_INFORMATION_CLASS
 
+        //NtQueryInformationFile
+        [Flags]
+        enum FILE_INFORMATION_CLASS
+        {
+            FileNameInformation = 9
+        } //partial enum, actual set is huge, google SYSTEM_INFORMATION_CLASS
+
         #endregion
 
         #region Functions
@@ -164,7 +184,7 @@ namespace GWMultiLaunch
         /// </summary>
         /// <param name="targetProcess"></param>
         /// <param name="handleNamePattern"></param>
-        public static bool KillHandle(Process targetProcess, string nameFragment)
+        public static bool KillHandle(Process targetProcess, string nameFragment, bool isFile)
         {
             bool success = false;
 
@@ -182,7 +202,16 @@ namespace GWMultiLaunch
             int hProcess = OpenProcess(ProcessAccessFlags.DupHandle, false, (UInt32)targetProcess.Id);
             foreach (SYSTEM_HANDLE_INFORMATION handleInfo in processHandles)
             {
-                string name = GetHandleName(handleInfo, hProcess);
+                string name;
+
+                if (isFile)
+                {
+                    name = GetFileName(handleInfo, hProcess);
+                }
+                else
+                {
+                    name = GetHandleName(handleInfo, hProcess);
+                }
 
                 if (name.Contains(nameFragment))
                 {
@@ -307,6 +336,46 @@ namespace GWMultiLaunch
             return processHandles;
         }
 
+        private static string GetFileName(SYSTEM_HANDLE_INFORMATION handleInfo, int hProcess)
+        {
+            try
+            {
+                int thisProcess = GetCurrentProcess();
+                int handle;
+
+                // Need to duplicate handle in this process to be able to access name
+                DuplicateHandle(hProcess, handleInfo.HandleValue, thisProcess, out handle, 0, false, DuplicateOptions.DUPLICATE_SAME_ACCESS);
+
+                // Setup buffer to store unicode string
+                int bufferSize = 0x100; //256 bytes
+
+                // Allocate unmanaged memory to store name
+                IntPtr pFileNameBuffer = Marshal.AllocHGlobal(bufferSize);
+                IO_STATUS_BLOCK ioStat = new IO_STATUS_BLOCK();
+
+                NtQueryInformationFile(handle, ref ioStat, pFileNameBuffer, bufferSize, FILE_INFORMATION_CLASS.FileNameInformation);
+
+                // Close this handle
+                CloseHandle(handle);    //super important... almost missed this
+
+                // offset of 4 seems to work...
+                int offsetToUniString = 4;
+
+                // Do the conversion to managed type
+                string fileName = Marshal.PtrToStringUni(new IntPtr(pFileNameBuffer.ToInt32() + offsetToUniString));
+
+                // Release
+                Marshal.FreeHGlobal(pFileNameBuffer);
+
+                return fileName;
+
+            }
+            catch (Exception)
+            {
+                return string.Empty;
+            }
+        }
+
         /// <summary>
         /// Queries for name of handle.
         /// </summary>
@@ -315,11 +384,11 @@ namespace GWMultiLaunch
         /// <returns></returns>
         private static string GetHandleName(SYSTEM_HANDLE_INFORMATION targetHandleInfo, int hProcess)
         {
-            //skip special NamedPipe handle (this causes hang up with NtQueryObject function)
-            //if (targetHandleInfo.AccessMask == 0x0012019F)
-            //{
-            //    return String.Empty;
-            //}
+            //skip special NamedPipe handle (this may cause hang up with NtQueryObject function)
+            if (targetHandleInfo.AccessMask == 0x0012019F)
+            {
+                return String.Empty;
+            }
 
             int thisProcess = GetCurrentProcess();
             int handle;
