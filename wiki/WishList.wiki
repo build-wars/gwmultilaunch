@@ -8,6 +8,9 @@
   * ~~Drag-n-drop into list~~
   * ~~Add button for making an extra copies of Guild Wars~~
 
+= Coming up =
+  * Add entry in ini file to remember "force launch" checkbox
+
 = Need help on =
   * Make shortcut creation not dependent on windows scripting host library
   * Virtualize file access to gw.dat (no need to make multiple copies anymore)
