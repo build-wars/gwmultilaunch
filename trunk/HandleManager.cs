@@ -30,27 +30,25 @@ namespace GWMultiLaunch
 
         [DllImport("kernel32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool CloseHandle(int hObject);
+        private static extern bool CloseHandle(IntPtr hObject);
 
         [DllImport("kernel32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool DuplicateHandle(int hSourceProcessHandle,
-            int hSourceHandle, int hTargetProcessHandle, out int lpTargetHandle,
+        private static extern bool DuplicateHandle(IntPtr hSourceProcessHandle,
+            IntPtr hSourceHandle, IntPtr hTargetProcessHandle, out IntPtr lpTargetHandle,
             uint dwDesiredAccess, [MarshalAs(UnmanagedType.Bool)] bool bInheritHandle, DuplicateOptions dwOptions);
 
         [DllImport("kernel32.dll")]
-        private static extern int GetCurrentProcess();
-
-        [DllImport("kernel32.dll")]
-        private static extern int OpenProcess(ProcessAccessFlags dwDesiredAccess, [MarshalAs(UnmanagedType.Bool)] bool bInheritHandle, UInt32 dwProcessID);
+        private static extern IntPtr OpenProcess(ProcessAccessFlags dwDesiredAccess, 
+            [MarshalAs(UnmanagedType.Bool)] bool bInheritHandle, UInt32 dwProcessID);
 
         [DllImport("ntdll.dll", SetLastError = true)]
-        private static extern NTSTATUS NtQueryInformationFile(int FileHandle,
+        private static extern NTSTATUS NtQueryInformationFile(IntPtr FileHandle,
             ref IO_STATUS_BLOCK IoStatusBlock, IntPtr FileInformation, int FileInformationLength, 
             FILE_INFORMATION_CLASS FileInformationClass);
 
         [DllImport("ntdll.dll")]
-        private static extern NTSTATUS NtQueryObject(int ObjectHandle, OBJECT_INFORMATION_CLASS ObjectInformationClass, 
+        private static extern NTSTATUS NtQueryObject(IntPtr ObjectHandle, OBJECT_INFORMATION_CLASS ObjectInformationClass, 
             IntPtr ObjectInformation, int ObjectInformationLength, out int ReturnLength);
 
         [DllImport("ntdll.dll")]
@@ -68,8 +66,8 @@ namespace GWMultiLaunch
             public Byte ObjectType;
             public Byte HandleFlags;
             public UInt16 HandleValue;
-            public UInt32 ObjectPointer;
-            public UInt32 AccessMask;
+            public UIntPtr ObjectPointer;
+            public IntPtr AccessMask;
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -97,23 +95,6 @@ namespace GWMultiLaunch
             public UInt64 Information;
         }
 
-
-        ////Not required, for reference
-        //[StructLayout(LayoutKind.Sequential)]
-        //private struct OBJECT_NAME_INFORMATION
-        //{
-        //    public UNICODE_STRING   Name;
-        //    public Char NameBuffer;
-        //}
-
-        [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        private struct UNICODE_STRING
-        {
-            public UInt16 Length;           //2 bytes
-            public UInt16 MaxLength;        //2 bytes
-            public IntPtr Buffer;           //4 bytes
-        }
-
         #endregion
 
         #region Enumerations
@@ -122,24 +103,24 @@ namespace GWMultiLaunch
         [Flags]
         private enum DuplicateOptions : uint
         {
-            DUPLICATE_CLOSE_SOURCE = (0x00000001),
-            DUPLICATE_SAME_ACCESS = (0x00000002)
+            DUPLICATE_CLOSE_SOURCE      = 0x00000001,
+            DUPLICATE_SAME_ACCESS       = 0x00000002
         }
 
         //OpenProcess
         [Flags]
         private enum ProcessAccessFlags : uint
         {
-            All = 0x001F0FFF,
-            Terminate = 0x00000001,
-            CreateThread = 0x00000002,
-            VMOperation = 0x00000008,
-            VMRead = 0x00000010,
-            VMWrite = 0x00000020,
-            DupHandle = 0x00000040,
-            SetInformation = 0x00000200,
-            QueryInformation = 0x00000400,
-            Synchronize = 0x00100000
+            All                         = 0x001F0FFF,
+            Terminate                   = 0x00000001,
+            CreateThread                = 0x00000002,
+            VMOperation                 = 0x00000008,
+            VMRead                      = 0x00000010,
+            VMWrite                     = 0x00000020,
+            DupHandle                   = 0x00000040,
+            SetInformation              = 0x00000200,
+            QueryInformation            = 0x00000400,
+            Synchronize                 = 0x00100000
         }
 
         //NtQueryObject and NtQuerySystemInformation
@@ -189,17 +170,20 @@ namespace GWMultiLaunch
             bool success = false;
 
             //pSysInfoBuffer is a pointer to unmanaged memory
-            IntPtr pSysInfoBuffer = GetAllHandles();
-            if (pSysInfoBuffer == IntPtr.Zero) return success;
+            IntPtr pSysHandles = GetAllHandles();
 
-            //Assemble list of SYSTEM_HANDLE_INFORMATION for the specified process
-            List<SYSTEM_HANDLE_INFORMATION> processHandles = GetHandles(targetProcess, pSysInfoBuffer);
+            //sanity check
+            if (pSysHandles == IntPtr.Zero) return success;
 
-            //time to free the unmanaged memory
-            Marshal.FreeHGlobal(pSysInfoBuffer);
+            //Assemble list of SYSTEM_HANDLE_INFORMATION for the specified target process
+            List<SYSTEM_HANDLE_INFORMATION> processHandles = GetHandles(targetProcess, pSysHandles);
+
+            //free pSysInfoBuffer buffer
+            Marshal.FreeHGlobal(pSysHandles);
 
             //Iterate through handles which belong to target process and kill
-            int hProcess = OpenProcess(ProcessAccessFlags.DupHandle, false, (UInt32)targetProcess.Id);
+            IntPtr hProcess = OpenProcess(ProcessAccessFlags.DupHandle, false, (UInt32)targetProcess.Id);
+
             foreach (SYSTEM_HANDLE_INFORMATION handleInfo in processHandles)
             {
                 string name;
@@ -215,7 +199,7 @@ namespace GWMultiLaunch
 
                 if (name.Contains(nameFragment))
                 {
-                    if (CloseHandleEx(handleInfo.OwnerPID, handleInfo.HandleValue))
+                    if (CloseHandleEx(handleInfo.OwnerPID, new IntPtr(handleInfo.HandleValue)))
                     {
                         success = true;
                     }
@@ -231,13 +215,14 @@ namespace GWMultiLaunch
         /// </summary>
         /// <param name="processID"></param>
         /// <param name="handleToClose"></param>
-        private static bool CloseHandleEx(UInt32 processID, int handleToClose)
+        private static bool CloseHandleEx(UInt32 processID, IntPtr handleToClose)
         {
-            int hProcess = OpenProcess(ProcessAccessFlags.All, false, processID);
+            IntPtr hProcess = OpenProcess(ProcessAccessFlags.All, false, processID);
 
             //Kills handle by DUPLICATE_CLOSE_SOURCE option, source is killed while destinationHandle goes to null
-            int x;
-            bool success = DuplicateHandle(hProcess, handleToClose, 0, out x, 0, false, DuplicateOptions.DUPLICATE_CLOSE_SOURCE);
+            IntPtr x;
+            bool success = DuplicateHandle(hProcess, handleToClose, IntPtr.Zero, 
+                out x, 0, false, DuplicateOptions.DUPLICATE_CLOSE_SOURCE);
 
             CloseHandle(hProcess);
 
@@ -251,12 +236,12 @@ namespace GWMultiLaunch
         /// <returns>Managed string.</returns>
         private static string ConvertToString(IntPtr pStringBuffer)
         {
-            string handleName;
+            long baseAddress = pStringBuffer.ToInt64();
 
-            // (UNICODE_STRING.Length) + (UNICODE_STRING.MaxLength) + (IntPtr.Size) = offset
-            // 2 + 2 + 4 = 8,
-            int offsetToUniString = 8;
-            handleName = Marshal.PtrToStringUni(new IntPtr(pStringBuffer.ToInt32() + offsetToUniString));
+            //don't know why, 8 bytes for 32 bit platforms and 16 bytes for 64 bit
+            int offset = IntPtr.Size * 2;
+
+            string handleName = Marshal.PtrToStringUni(new IntPtr(baseAddress + offset));
 
             return handleName;
         }
@@ -269,30 +254,40 @@ namespace GWMultiLaunch
         /// <returns>Unmanaged IntPtr to the handles (raw data, must be processed)</returns>
         private static IntPtr GetAllHandles()
         {
-            int bufferSize = 0x1000;    //initial buffer size of 4096 bytes
-            int actualSize;             //will store size of data written to buffer
+            int bufferSize = 0x10000;   //initial buffer size of 65536 bytes (initial estimate)
+            int actualSize;             //will store size of actual data written to buffer
 
+            //initial allocation
             IntPtr pSysInfoBuffer = Marshal.AllocHGlobal(bufferSize);
 
-            // Keep trying until buffer is large enough to fit all handles
+            //query for handles (priming call, since initial buffer size will probably not be big enough)
             NTSTATUS queryResult = NtQuerySystemInformation(SYSTEM_INFORMATION_CLASS.SystemHandleInformation, 
                 pSysInfoBuffer, bufferSize, out actualSize);
+
+            // Keep calling until buffer is large enough to fit all handles
             while (queryResult == NTSTATUS.STATUS_INFO_LENGTH_MISMATCH)
             {
-                bufferSize = bufferSize * 2;                //double buffer size
+                //deallocate space since we couldn't fit all the handles in
                 Marshal.FreeHGlobal(pSysInfoBuffer);
+
+                //double buffer size (we can't just use actualSize from last call since # of handles vary in time)
+                bufferSize = bufferSize * 2;
+   
+                //allocate memory with increase buffer size
                 pSysInfoBuffer = Marshal.AllocHGlobal(bufferSize);
+
+                //query for handles
                 queryResult = NtQuerySystemInformation(SYSTEM_INFORMATION_CLASS.SystemHandleInformation, 
                     pSysInfoBuffer, bufferSize, out actualSize);
             }
 
             if (queryResult == NTSTATUS.STATUS_SUCCESS)
             {
-                return pSysInfoBuffer; //pSysteInfoBuffer will be freed later
+                return pSysInfoBuffer; //pSystInfoBuffer will be freed later
             }
             else
             {
-                //something went majorly wrong
+                //other NTSTATUS, shouldn't happen
                 Marshal.FreeHGlobal(pSysInfoBuffer);
                 return IntPtr.Zero; 
             }
@@ -304,50 +299,56 @@ namespace GWMultiLaunch
         /// <param name="targetProcess">The process whose handles you want.</param>
         /// <param name="pAllHandles">Pointer to all the system handles.</param>
         /// <returns>List of handles owned by the targetProcess</returns>
-        private static List<SYSTEM_HANDLE_INFORMATION> GetHandles(Process targetProcess, IntPtr pAllHandles)
+        private static List<SYSTEM_HANDLE_INFORMATION> GetHandles(Process targetProcess, IntPtr pSysHandles)
         {
             List<SYSTEM_HANDLE_INFORMATION> processHandles = new List<SYSTEM_HANDLE_INFORMATION>();
 
-            int offset;         //offset from beginning of pAllHandles
-            IntPtr pLocation;   //start address of current system handle info block
+            Int64 pBaseLocation = pSysHandles.ToInt64();    //base address
+            Int64 currentOffset;                            //offset from pBaseLocation
+            IntPtr pLocation;                               //current address
 
-            int nHandles = Marshal.ReadInt32(pAllHandles);
-            SYSTEM_HANDLE_INFORMATION currentHandle = new SYSTEM_HANDLE_INFORMATION();
+            SYSTEM_HANDLE_INFORMATION currentHandleInfo;
+
+            //number of total system handles (should be okay for 64bit version too)
+            int nHandles = Marshal.ReadInt32(pSysHandles);
 
             // Iterate through all system handles
             for (int i = 0; i < nHandles; i++)
             {
-                //first 4 bytes stores number of handles
-                //data follows, each set is 16 bytes wide
-                offset = 4 + i * 16;
-                pLocation = new IntPtr(pAllHandles.ToInt32() + offset);
+                //first (IntPtr.Size) bytes stores number of handles
+                //data follows, each set is size of SYSTEM_HANDLE_INFORMATION
+                currentOffset = IntPtr.Size + i * Marshal.SizeOf(typeof(SYSTEM_HANDLE_INFORMATION));
+
+                //calculate intptr to new location
+                pLocation = new IntPtr(pBaseLocation + currentOffset);
 
                 // Create structure out of the memory block
-                currentHandle = (SYSTEM_HANDLE_INFORMATION)
-                    Marshal.PtrToStructure(pLocation, currentHandle.GetType());
+                currentHandleInfo = (SYSTEM_HANDLE_INFORMATION)
+                    Marshal.PtrToStructure(pLocation, typeof(SYSTEM_HANDLE_INFORMATION));
 
                 // Add only handles which match the target process id
-                if (currentHandle.OwnerPID == (UInt32)targetProcess.Id)
+                if (currentHandleInfo.OwnerPID == (UInt32)targetProcess.Id)
                 {
-                    processHandles.Add(currentHandle);
+                    processHandles.Add(currentHandleInfo);
                 }
             }
 
             return processHandles;
         }
 
-        private static string GetFileName(SYSTEM_HANDLE_INFORMATION handleInfo, int hProcess)
+        private static string GetFileName(SYSTEM_HANDLE_INFORMATION handleInfo, IntPtr hProcess)
         {
             try
             {
-                int thisProcess = GetCurrentProcess();
-                int handle;
+                IntPtr thisProcess = Process.GetCurrentProcess().Handle;
+                IntPtr handle;
 
                 // Need to duplicate handle in this process to be able to access name
-                DuplicateHandle(hProcess, handleInfo.HandleValue, thisProcess, out handle, 0, false, DuplicateOptions.DUPLICATE_SAME_ACCESS);
+                DuplicateHandle(hProcess, new IntPtr(handleInfo.HandleValue), thisProcess, 
+                    out handle, 0, false, DuplicateOptions.DUPLICATE_SAME_ACCESS);
 
                 // Setup buffer to store unicode string
-                int bufferSize = 0x100; //256 bytes
+                int bufferSize = 0x200; //512 bytes
 
                 // Allocate unmanaged memory to store name
                 IntPtr pFileNameBuffer = Marshal.AllocHGlobal(bufferSize);
@@ -358,11 +359,12 @@ namespace GWMultiLaunch
                 // Close this handle
                 CloseHandle(handle);    //super important... almost missed this
 
-                // offset of 4 seems to work...
-                int offsetToUniString = 4;
+                // offset=4 seems to work...
+                int offset = 4;
+                long pBaseAddress = pFileNameBuffer.ToInt64();
 
                 // Do the conversion to managed type
-                string fileName = Marshal.PtrToStringUni(new IntPtr(pFileNameBuffer.ToInt32() + offsetToUniString));
+                string fileName = Marshal.PtrToStringUni(new IntPtr(pBaseAddress + offset));
 
                 // Release
                 Marshal.FreeHGlobal(pFileNameBuffer);
@@ -382,19 +384,20 @@ namespace GWMultiLaunch
         /// <param name="targetHandleInfo">The handle info.</param>
         /// <param name="hProcess">Open handle to the process which owns that handle.</param>
         /// <returns></returns>
-        private static string GetHandleName(SYSTEM_HANDLE_INFORMATION targetHandleInfo, int hProcess)
+        private static string GetHandleName(SYSTEM_HANDLE_INFORMATION targetHandleInfo, IntPtr hProcess)
         {
             //skip special NamedPipe handle (this may cause hang up with NtQueryObject function)
-            if (targetHandleInfo.AccessMask == 0x0012019F)
+            if (targetHandleInfo.AccessMask.ToInt64() == 0x0012019F)
             {
                 return String.Empty;
             }
 
-            int thisProcess = GetCurrentProcess();
-            int handle;
+            IntPtr thisProcess = Process.GetCurrentProcess().Handle;
+            IntPtr handle;
 
             // Need to duplicate handle in this process to be able to access name
-            DuplicateHandle(hProcess, targetHandleInfo.HandleValue, thisProcess, out handle, 0, false, DuplicateOptions.DUPLICATE_SAME_ACCESS);
+            DuplicateHandle(hProcess, new IntPtr(targetHandleInfo.HandleValue), thisProcess, 
+                out handle, 0, false, DuplicateOptions.DUPLICATE_SAME_ACCESS);
 
             // Setup buffer to store unicode string
             int bufferSize = GetHandleNameLength(handle);
@@ -422,17 +425,17 @@ namespace GWMultiLaunch
         /// </summary>
         /// <param name="handle">Handle to process.</param>
         /// <returns></returns>
-        private static int GetHandleNameLength(int handle)
+        private static int GetHandleNameLength(IntPtr handle)
         {
-            int infoBufferSize = 56;    //56 bytes = size of OBJECT_BASIC_INFORMATION struct
-            IntPtr pInfoBuffer = Marshal.AllocHGlobal(infoBufferSize);  //allocate
+            int infoBufferSize = Marshal.SizeOf(typeof(OBJECT_BASIC_INFORMATION));  //size of OBJECT_BASIC_INFORMATION struct
+            IntPtr pInfoBuffer = Marshal.AllocHGlobal(infoBufferSize);              //allocate
 
             // Query for handle's OBJECT_BASIC_INFORMATION
             NtQueryObject(handle, OBJECT_INFORMATION_CLASS.ObjectBasicInformation, pInfoBuffer, infoBufferSize, out infoBufferSize);
 
             // Map memory to structure
-            OBJECT_BASIC_INFORMATION objInfo = new OBJECT_BASIC_INFORMATION();
-            objInfo = (OBJECT_BASIC_INFORMATION)Marshal.PtrToStructure(pInfoBuffer, objInfo.GetType());
+            OBJECT_BASIC_INFORMATION objInfo = 
+                (OBJECT_BASIC_INFORMATION)Marshal.PtrToStructure(pInfoBuffer, typeof(OBJECT_BASIC_INFORMATION));
 
             Marshal.FreeHGlobal(pInfoBuffer);   //release
 

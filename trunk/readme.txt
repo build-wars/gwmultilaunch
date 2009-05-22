@@ -97,6 +97,11 @@ http://code.google.com/p/gwmultilaunch/
   * Aciid Bu5t0r - thank you for bringing up the idea of forcefully unlocking gw.dat
 
 ==History==
+v0.5RC (2009/05/22)
+  * Dual releases now, one for 32-bit windows, one for 64-bit windows
+  * Rewrote large portion of handle managing code to be 64-bit compatible
+  * Misc speedups in HandleManager
+  
 v0.45b (2009/05/17)
   * Fixed bug introduced with implementing gw.dat unlocking affecting normal operations in Vista 64-bit
   

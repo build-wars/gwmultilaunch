@@ -65,6 +65,7 @@ namespace GWMultiLaunch
         private const string TEXMOD_PATH_KEY = "texmodpath";
         private const string REG_DELAY_NAME = "regdelay";
         private const int DEFAULT_REG_DELAY = 3000;
+        private const string DAT_UNLOCK_KEY = "forcedatunlock";
 
         private const string PROFILES_SECTION = "profiles";
         private const string SELECTED_KEY_NAME = "selected";
@@ -76,21 +77,16 @@ namespace GWMultiLaunch
         private string mINIFilePath;
         private string mTexmodPath;
         private int mRegistryCooldown;
+        private bool mForceUnlock;
 
         #endregion
 
         # region Properties
 
-        public string TexmodPath
+        public bool ForceUnlock
         {
-            get { return mTexmodPath; }
-            set { mTexmodPath = value; }
-        }
-
-        public int[] SelectedIndices
-        {
-            get { return mProfiles.SelectedIndices; }
-            set { mProfiles.SelectedIndices = value; }
+            get { return mForceUnlock; }
+            set { mForceUnlock = value; }
         }
 
         public Dictionary<string, string> Profiles
@@ -101,6 +97,18 @@ namespace GWMultiLaunch
         public int RegistryCooldown
         {
             get { return mRegistryCooldown; }
+        }
+
+        public int[] SelectedIndices
+        {
+            get { return mProfiles.SelectedIndices; }
+            set { mProfiles.SelectedIndices = value; }
+        }
+
+        public string TexmodPath
+        {
+            get { return mTexmodPath; }
+            set { mTexmodPath = value; }
         }
 
         #endregion
@@ -150,6 +158,9 @@ namespace GWMultiLaunch
             //Get cooldown value
             mRegistryCooldown = GetRegDelay();
 
+            //Get ForceDatUnlock value
+            mForceUnlock = GetForceDatUnlock();
+
             //Load launch profiles from ini
             mProfiles = LoadProfiles();
         }
@@ -162,8 +173,34 @@ namespace GWMultiLaunch
             //Write cooldown value
             WriteINIValue(OPTIONS_SECTION, REG_DELAY_NAME, mRegistryCooldown.ToString(), mINIFilePath);
 
+            //Write ForceDatUnlock value
+            if (mForceUnlock)
+            {
+                WriteINIValue(OPTIONS_SECTION, DAT_UNLOCK_KEY, "true", mINIFilePath);
+            }
+            else
+            {
+                WriteINIValue(OPTIONS_SECTION, DAT_UNLOCK_KEY, "false", mINIFilePath);
+            }
+
             //Write launch profiles to ini
             WriteProfiles();
+        }
+
+        private bool GetForceDatUnlock()
+        {
+            bool bForceUnlock = false;
+
+            string rawValue = GetIniValue(OPTIONS_SECTION, DAT_UNLOCK_KEY, mINIFilePath);
+            if (rawValue != string.Empty)
+            {
+                if(rawValue.Equals("true", StringComparison.OrdinalIgnoreCase))
+                {
+                    bForceUnlock = true;
+                }
+            }
+
+            return bForceUnlock;
         }
 
         private int GetRegDelay()
