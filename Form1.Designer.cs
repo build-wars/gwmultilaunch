@@ -80,9 +80,9 @@ namespace GWMultiLaunch
             this.profilesListBox.Size = new System.Drawing.Size(382, 180);
             this.profilesListBox.TabIndex = 0;
             this.profilesListBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.profilesListBox_MouseDoubleClick);
-            this.profilesListBox.DragEnter += new System.Windows.Forms.DragEventHandler(this.ProfilesListBox_DragEnter);
-            this.profilesListBox.DragDrop += new System.Windows.Forms.DragEventHandler(this.ProfilesListBox_DragDrop);
             this.profilesListBox.SelectedIndexChanged += new System.EventHandler(this.ProfilesListBox_SelectedIndexChanged);
+            this.profilesListBox.DragDrop += new System.Windows.Forms.DragEventHandler(this.ProfilesListBox_DragDrop);
+            this.profilesListBox.DragEnter += new System.Windows.Forms.DragEventHandler(this.ProfilesListBox_DragEnter);
             // 
             // mutexButton
             // 
@@ -156,6 +156,8 @@ namespace GWMultiLaunch
             // forceLaunchCheckBox
             // 
             this.forceLaunchCheckBox.AutoSize = true;
+            this.forceLaunchCheckBox.Checked = true;
+            this.forceLaunchCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.forceLaunchCheckBox.Location = new System.Drawing.Point(6, 65);
             this.forceLaunchCheckBox.Name = "forceLaunchCheckBox";
             this.forceLaunchCheckBox.Size = new System.Drawing.Size(372, 17);
@@ -247,7 +249,7 @@ namespace GWMultiLaunch
             this.MinimumSize = new System.Drawing.Size(555, 365);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Guild Wars Multi-Launch (v0.45 beta)";
+            this.Text = "Guild Wars Multi-Launch (v0.5 RC) (32-bit)";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);

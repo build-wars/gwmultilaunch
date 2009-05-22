@@ -57,6 +57,11 @@ namespace GWMultiLaunch
             mSelectedPath = string.Empty;
 
             InitializeInstallList();
+
+            if (!mFileCloset.ForceUnlock)
+            {
+                forceLaunchCheckBox.Checked = false;
+            }
         }
 
         private bool AddCopy(string pathToAdd)
@@ -448,6 +453,14 @@ namespace GWMultiLaunch
                 {
                     forceLaunchCheckBox.Checked = false;
                 }
+                else
+                {
+                    mFileCloset.ForceUnlock = true;
+                }
+            }
+            else
+            {
+                mFileCloset.ForceUnlock = false;
             }
         }
 
