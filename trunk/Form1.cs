@@ -62,6 +62,14 @@ namespace GWMultiLaunch
             {
                 forceLaunchCheckBox.Checked = false;
             }
+
+            if (IntPtr.Size == 8)
+            {
+                MessageBox.Show(@"Warning: You are running the 32-bit build" + 
+                " of Guild Wars Multi-Launch under a 64-bit operating system. Functionality" +
+                "will be affected! Use the 64-bit version.", 
+                "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         private bool AddCopy(string pathToAdd)
