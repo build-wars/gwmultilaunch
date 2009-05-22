@@ -68,7 +68,7 @@ Vista and Win7 are tricky in that, once you approve a program to run as admin, i
 Solutions:
 1) Run Guild Wars Multi-Launcher in admin mode (right click gwmultilaunch.exe-> run as admin)
 
-running gwml in admin mode as well puts it on equal footing with gw.exe that was run as admin. this allows it to close the mutex which prevents future gw.exes from launching.
+Running gwml in admin mode as well puts it on equal footing with gw.exe that was run as admin. This allows it to close the mutex which prevents more gw.exes from launching.
 
 ==FAQ==
 
