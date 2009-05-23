@@ -16,6 +16,9 @@
 //You should have received a copy of the GNU General Public License
 //along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+//comment out for 64 bit builds
+#define BUILD32
+
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -63,13 +66,18 @@ namespace GWMultiLaunch
                 forceLaunchCheckBox.Checked = false;
             }
 
-            if (IntPtr.Size == 8)
-            {
-                MessageBox.Show(@"Warning: You are running the 32-bit build" + 
-                " of Guild Wars Multi-Launch under a 64-bit operating system. Functionality" +
-                "will be affected! Use the 64-bit version.", 
-                "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
+            #if (BUILD32)
+            if (Environment.GetEnvironmentVariable("ProgramFiles(x86)") != null)
+                {
+                    MessageBox.Show(@"Warning: You are running the 32-bit build" + 
+                    " of Guild Wars Multi-Launch under a 64-bit operating system. Functionality " +
+                    "will be affected! Use the 64-bit version of GWML.", 
+                    "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+                this.Text += " (32-bit)";
+            #else
+                this.Text += " (64-bit)";
+            #endif
         }
 
         private bool AddCopy(string pathToAdd)
