@@ -7,14 +7,7 @@
   * ~~Icons~~
   * ~~Drag-n-drop into list~~
   * ~~Add button for making an extra copies of Guild Wars~~
-
-= Coming up =
-  * Add entry in ini file to remember "force launch" checkbox
+  * ~~Add entry in ini file to remember "force launch" checkbox~~
 
 = Need help on =
   * Make shortcut creation not dependent on windows scripting host library
-  * Virtualize file access to gw.dat (no need to make multiple copies anymore)
-    * Need to add hook into Guild Wars to intercept file opens, file writes, file reads, and file closes. Write operations should be committed to virtual file to prevent exclusive file lock on original gw.dat from occurring.
-    * See http://www.codeproject.com/KB/winsdk/MonitorWindowsFileSystem.aspx
-    * Also see http://www.codeproject.com/KB/system/hooksys.aspx
-    * http://www.sandboxie.com/phpbb/viewtopic.php?t=2028
