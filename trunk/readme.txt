@@ -4,26 +4,26 @@ Open Source License: GPLv3
 
 ==Summary==
 
-Launching multiple copies of Guild Wars.
+Launch multiple copies of Guild Wars.
 (no modifications to Guild Wars files!)
 
 ==Requirements==
 
   # Guild Wars
-  # .NET Framework 2.0 or equivalent
-  # Windows XP, Vista, or 7
-
+  # Windows 2000, XP, Vista, or 7
+  # .NET Framework 2.0 or higher
+  
 ==Usage==
 
-Copies of the Guild Wars folder need to be made. The number of copies depends on how many copies you would like to have open at once. You will only need to make 1 extra copy to be able to run two copies side by side.
+Copies of the Guild Wars folder need to be made. The number of copies depends on how many copies you would like to have open at once. You will only need to make 1 extra copy to be able to run two copies side by side. (The experimental unlock gw.dat generally should only be used for quick muling sessions, it is recommended to make a full copy if you have the disk space.)
 
-After these copies are made, add them to the list. Then, make the multi-launch enabled shortcuts which are good for launching multiple copies of Guild Wars. Or just select the game and launch it from the gui.
+After these copies are made, add them to the list. Then, make the multi-launch enabled shortcuts which are good for launching multiple copies of Guild Wars from the desktop. Or just select the game and launch it from the launcher.
 
-(if you are using Vista/7 and having trouble running multiple copies see notes)
+(If you are using Vista/7 and having trouble running multiple copies see notes further down.)
 
 Concisely:
 
-  # Make copies of Guild Wars folder (just need gw.exe and gw.dat)
+  # Make copies of the Guild Wars folder (just need gw.exe and gw.dat)
   # Add the gw.exe(s) to the list
   # Double click item to launch
     * or click "Launch" button
@@ -56,7 +56,7 @@ Texmod Usage: Check the FAQ section.
 
 ==Vista/Win7 Quirk==
 
-Any guild wars copies installed to:
+Any Guild Wars copies installed to:
 C:\Program Files or C:\Program Files (x86) <--folder only exists in 64-bit window installs
 
 seem to require special permissions when started. (at least on Vista-64, may be true for Vista and Win7 32bit as well)
@@ -65,8 +65,8 @@ Specifically gw.exe needs to be ran as administrator to access gw.dat. When gw.e
 
 Vista and Win7 are tricky in that, once you approve a program to run as admin, it doesn't really ask you again for a while. Even if you move it, it still seems to remember to run as admin. Don't know if this lasts the session or not.
 
-Solutions:
-1) Run Guild Wars Multi-Launcher in admin mode (right click gwmultilaunch.exe-> run as admin)
+Solution:
+Run Guild Wars Multi-Launcher in admin mode (right click gwmultilaunch.exe-> run as admin)
 
 Running gwml in admin mode as well puts it on equal footing with gw.exe that was run as admin. This allows it to close the mutex which prevents more gw.exes from launching.
 
@@ -74,15 +74,19 @@ Running gwml in admin mode as well puts it on equal footing with gw.exe that was
 
 Q: Do I have to always use the launcher or the special shortcuts?
 
-A: No, you only need to use the launcher or shortcuts when you wish to launch multiple copies of Guild Wars.
+A: No, you only need to use the launcher or special shortcuts when you wish to launch multiple copies of Guild Wars.
+
+Q: When I try to launch a second copy, it just takes me back to the first. Why?
+
+A: Either, the wrong edition of the launcher is being used or you gw.exe was run as admin and the launcher does not have proper access to it. If you are on a 64 bit operating system, you MUST use the 64-bit edition of the launcher. Easy way to check is to see if there is a "C:\Program Files(x86)" folder. Otherwise, if gw.exe was ran as admin (Vista/7), you need to run the launcher as admin as well. Right click the launcher shortcut and click "Run as Administrator".
 
 Q: Why do I get a "gw.dat is locked" message?
 
-A: This is often the case if you launch the copy without setting the registry path properly. If you are planning to launch multiplecopies, the registry path must be set properly to avoid conflicts. Gw.exe will always use the path found in the registry to locate gw.dat.
+A: This is often the case if you launch the copy without setting the registry path properly. If you are planning to launch multiple copies, the registry path must be set beforehand to avoid sharing conflicts of gw.dat. Gw.exe will always use the path found in the registry to locate gw.dat.
 
-Q: When I try to launch muliple copies at once through the launcher, not all of them launch. Why?
+Q: When I try to launch muliple copies at once through the launcher, not all of them launch successfully. I get the gw.dat is locked message for a different copy. Why?
 
-A: The default delay between copies is current set to 3000 milliseconds in the "regdelay" setting in your ini file. Increase this value for slower computers since Guild Wars may need more time to read the value off the registry before it is set to something else for the next copy.
+A: The default delay between copies is set to 3000 milliseconds in the "regdelay" setting of the ini file. Increase this value for slower computers since Guild Wars may need more time to read the value off the registry. The value determines the delay time between launching of multiple copies through the launcher.
 
 Q: What is a Mutex?
 
@@ -118,7 +122,7 @@ http://code.google.com/p/gwmultilaunch/
 v0.5RC (2009/05/22)
   * Dual releases now, one for 32-bit windows, one for 64-bit windows
   * Rewrote large portion of handle managing code to be 64-bit compatible
-  * Misc speedups in HandleManager
+  * Misc speed-ups in "HandleManager.cs"
   
 v0.45b (2009/05/17)
   * Fixed bug introduced with implementing gw.dat unlocking affecting normal operations in Vista 64-bit
