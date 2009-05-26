@@ -73,6 +73,10 @@ Running gwml in admin mode as well puts it on equal footing with gw.exe that was
 
 ==FAQ==
 
+Q: I have tried running the launcher as admin but still cannot get multiple copies to launch. What can I do?
+
+A: Most likely, you have a modified gw.exe file. To ensure a clean file, grab gwsetup from the ArenaNet and start the install/download for Guild Wars. Stop it when it starts to download stuff into gw.dat. You should be able to just copy over your old dat file.
+
 Q: Do I have to always use the launcher or the special shortcuts?
 
 A: No, you only need to use the launcher or special shortcuts when you wish to launch multiple copies of Guild Wars.
