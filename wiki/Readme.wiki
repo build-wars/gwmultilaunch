@@ -57,19 +57,16 @@ Texmod Usage: Check the FAQ section.
 
 ==Vista/Win7 Quirk==
 
-Any Guild Wars copies installed to:
-C:\Program Files or C:\Program Files (x86) <--folder only exists in 64-bit window installs
-
-seem to require special permissions when started. (at least on Vista-64, may be true for Vista and Win7 32bit as well)
+Any Guild Wars copies installed to: C:\Program Files or C:\Program Files (x86) <--folder only exists in 64-bit window installs seem to require special permissions when started. 
 
 Specifically gw.exe needs to be ran as administrator to access gw.dat. When gw.exe is ran as administrator, in Vista and Win7, Guild Wars Multi-launcher ALSO needs to be ran as administrator for it to be able to close handles in the gw copy that ran as admin.
 
-Vista and Win7 are tricky in that, once you approve a program to run as admin, it doesn't really ask you again for a while. Even if you move it, it still seems to remember to run as admin. Don't know if this lasts the session or not.
+Also, Vista and Win7 are tricky in that, once you approve a program to run as admin, it doesn't ask again. Even if you move it, it still seems to remember to run as admin. This memory effect might last just the session or longer.
 
 Solution:
 Run Guild Wars Multi-Launcher in admin mode (right click gwmultilaunch.exe-> run as admin)
 
-Running gwml in admin mode as well puts it on equal footing with gw.exe that was run as admin. This allows it to close the mutex which prevents more gw.exes from launching.
+Running gwml in admin mode as well puts it on equal footing with gw.exe that was run as admin. This tells Windows that the launcher has permission to close gw.exe's mutex.
 
 ==FAQ==
 
