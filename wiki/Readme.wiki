@@ -30,7 +30,7 @@ Concisely:
     * or click "Launch" button
     * or make a shortcut for external launching
 
-Guild Wars Updates: When there is an update, you will need to launch a second time if you have multiple Guild Wars updating at the same time. See gw.dat question in the FAQ for details.
+Guild Wars Updates: When there is an update, launch one copy at a time (wait until update finishes) with the launcher to ensure all copies are properly updated. See gw.dat question in the FAQ for details.
 
 Texmod Usage: Check the FAQ section.
 
@@ -57,22 +57,21 @@ Texmod Usage: Check the FAQ section.
 
 ==Vista/Win7 Quirk==
 
-Any Guild Wars copies installed to: C:\Program Files or C:\Program Files (x86) <--folder only exists in 64-bit window installs seem to require special permissions when started. 
+Any Guild Wars copies installed to:
+C:\Program Files or C:\Program Files (x86) <--folder only exists in 64-bit window installs
+
+seem to require special permissions when started. (at least on Vista-64, may be true for Vista and Win7 32bit as well)
 
 Specifically gw.exe needs to be ran as administrator to access gw.dat. When gw.exe is ran as administrator, in Vista and Win7, Guild Wars Multi-launcher ALSO needs to be ran as administrator for it to be able to close handles in the gw copy that ran as admin.
 
-Also, Vista and Win7 are tricky in that, once you approve a program to run as admin, it doesn't ask again. Even if you move it, it still seems to remember to run as admin. This memory effect might last just the session or longer.
+Vista and Win7 are tricky in that, once you approve a program to run as admin, it doesn't really ask you again for a while. Even if you move it, it still seems to remember to run as admin. Don't know if this lasts the session or not.
 
 Solution:
 Run Guild Wars Multi-Launcher in admin mode (right click gwmultilaunch.exe-> run as admin)
 
-Running gwml in admin mode as well puts it on equal footing with gw.exe that was run as admin. This tells Windows that the launcher has permission to close gw.exe's mutex.
+Running gwml in admin mode as well puts it on equal footing with gw.exe that was run as admin. This allows it to close the mutex which prevents more gw.exes from launching.
 
 ==FAQ==
-
-Q: I have tried running the launcher as admin but still cannot get multiple copies to launch. What can I do?
-
-A: Most likely, you have a modified gw.exe file. To ensure a clean file, grab gwsetup from the ArenaNet and start the install/download for Guild Wars. Stop it when it starts to download stuff into gw.dat. You should be able to just copy over your old dat file.
 
 Q: Do I have to always use the launcher or the special shortcuts?
 
@@ -80,7 +79,7 @@ A: No, you only need to use the launcher or special shortcuts when you wish to l
 
 Q: When I try to launch a second copy, it just takes me back to the first. Why?
 
-A: Either, the wrong edition of the launcher is being used or you gw.exe was run as admin and the launcher does not have proper access to it. If you are on a 64 bit operating system, you MUST use the 64-bit edition of the launcher. Easy way to check is to see if there is a "C:\Program Files(x86)" folder. Otherwise, if gw.exe was ran as admin (Vista/7), you need to run the launcher as admin as well. Right click the launcher shortcut and click "Run as Administrator".
+A: Either, the wrong edition of the launcher is being used or gw.exe was run as admin and the launcher does not have proper access to it. If you are on a 64 bit operating system, you MUST use the 64-bit edition of the launcher. Easy way to check is to see if there is a "C:\Program Files(x86)" folder. Otherwise, if gw.exe was ran as admin (Vista/7), you need to run the launcher as admin as well. Right click the launcher shortcut and click "Run as Administrator".
 
 Q: Why do I get a "gw.dat is locked" message?
 
@@ -89,6 +88,10 @@ A: This is often the case if you launch the copy without setting the registry pa
 Q: When I try to launch muliple copies at once through the launcher, not all of them launch successfully. I get the gw.dat is locked message for a different copy. Why?
 
 A: The default delay between copies is set to 3000 milliseconds in the "regdelay" setting of the ini file. Increase this value for slower computers since Guild Wars may need more time to read the value off the registry. The value determines the delay time between launching of multiple copies through the launcher.
+
+Q: I get an immediate crash when I run the program.
+
+A: There are issues with .NET framework configuration or install. If you get "Problem Signature 09: System.Security.Security" in details, you may be running this off a network drive (older .NET framework defaults disallow this). Try installing .NET framework 3.5 sp1 if you are not comfortable adjusting .NET security settings.
 
 Q: What is a Mutex?
 
@@ -119,8 +122,13 @@ http://code.google.com/p/gwmultilaunch/
   * moriz - thank you for being the brave soul to test this in windows 7
   * Alexander Burn Victim - thank you for testing in vista 64-bit
   * Aciid Bu5t0r - thank you for bringing up the idea of forcefully unlocking gw.dat
+  * MithranArkanere - thank you for detailing the registry issue
 
 ==History==
+v0.5 (2009/06/12)
+  * Milestone final release. (v1.0 release supporting launching without making copies on wishlist)
+  * Fixed registry writing code to write to both CURRENT_USER and LOCAL_MACHINE if paths exist
+  
 v0.5RC (2009/05/22)
   * Dual releases now, one for 32-bit windows, one for 64-bit windows
   * Rewrote large portion of handle managing code to be 64-bit compatible
