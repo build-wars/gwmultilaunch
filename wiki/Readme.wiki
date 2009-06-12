@@ -75,6 +75,13 @@ Running gwml in admin mode as well puts it on equal footing with gw.exe that was
 
 ==FAQ==
 
+Q: How do I use Texmod with this?
+
+A: To launch a Texmoded copy:
+   # Select the copy you will be launching and click "Set Registry Path"
+   # Click "Clear Mutex"
+   # Open Texmod and launch the copy
+
 Q: Do I have to always use the launcher or the special shortcuts?
 
 A: No, you only need to use the launcher or special shortcuts when you wish to launch multiple copies of Guild Wars.
@@ -98,13 +105,6 @@ A: There are issues with .NET framework configuration or install. If you get "Pr
 Q: What is a Mutex?
 
 A: Simple answer, a flag that gw.exe puts up so new gw.exe processes know to not launch. Long answer, check wikipedia.
-
-Q: How do I use Texmod with this?
-
-A: To launch a Texmoded copy:
-   # Select the copy you will be launching and click "Set Registry Path"
-   # Click "Clear Mutex"
-   # Open Texmod and launch the copy
 
 Q: How do I report a bug?
 
