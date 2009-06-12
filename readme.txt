@@ -29,7 +29,7 @@ Concisely:
     * or click "Launch" button
     * or make a shortcut for external launching
 
-Guild Wars Updates: When there is an update, you will need to launch a second time if you have multiple Guild Wars updating at the same time. See gw.dat question in the FAQ for details.
+Guild Wars Updates: When there is an update, launch one copy at a time (wait until update finishes) with the launcher to ensure all copies are properly updated. See gw.dat question in the FAQ for details.
 
 Texmod Usage: Check the FAQ section.
 
@@ -56,8 +56,10 @@ Texmod Usage: Check the FAQ section.
 
 ==Vista/Win7 Quirk==
 
-Any Guild Wars copies installed to:
-C:\Program Files or C:\Program Files (x86) <--folder only exists in 64-bit window installs
+Short version: Run the launcher as administrator.
+
+Long version: Any Guild Wars copies installed to:
+C:\Program Files or C:\Program Files (x86) <--folder only exists in 64-bit window installs 
 
 seem to require special permissions when started. (at least on Vista-64, may be true for Vista and Win7 32bit as well)
 
@@ -72,13 +74,20 @@ Running gwml in admin mode as well puts it on equal footing with gw.exe that was
 
 ==FAQ==
 
+Q: How do I use Texmod with this?
+
+A: To launch a Texmoded copy:
+   # Select the copy you will be launching and click "Set Registry Path"
+   # Click "Clear Mutex"
+   # Open Texmod and launch the copy
+
 Q: Do I have to always use the launcher or the special shortcuts?
 
 A: No, you only need to use the launcher or special shortcuts when you wish to launch multiple copies of Guild Wars.
 
 Q: When I try to launch a second copy, it just takes me back to the first. Why?
 
-A: Either, the wrong edition of the launcher is being used or you gw.exe was run as admin and the launcher does not have proper access to it. If you are on a 64 bit operating system, you MUST use the 64-bit edition of the launcher. Easy way to check is to see if there is a "C:\Program Files(x86)" folder. Otherwise, if gw.exe was ran as admin (Vista/7), you need to run the launcher as admin as well. Right click the launcher shortcut and click "Run as Administrator".
+A: Either, the wrong edition of the launcher is being used or gw.exe was run as admin and the launcher does not have proper access to it. If you are on a 64 bit operating system, you MUST use the 64-bit edition of the launcher. Easy way to check is to see if there is a "C:\Program Files(x86)" folder. Otherwise, if gw.exe was ran as admin (Vista/7), you need to run the launcher as admin as well. Right click the launcher shortcut and click "Run as Administrator".
 
 Q: Why do I get a "gw.dat is locked" message?
 
@@ -88,16 +97,13 @@ Q: When I try to launch muliple copies at once through the launcher, not all of 
 
 A: The default delay between copies is set to 3000 milliseconds in the "regdelay" setting of the ini file. Increase this value for slower computers since Guild Wars may need more time to read the value off the registry. The value determines the delay time between launching of multiple copies through the launcher.
 
+Q: I get an immediate crash when I run the program.
+
+A: There are issues with .NET framework configuration or install. If you get "Problem Signature 09: System.Security.Security" in details, you may be running this off a network drive (older .NET framework defaults disallow this). Try installing .NET framework 3.5 sp1 if you are not comfortable adjusting .NET security settings.
+
 Q: What is a Mutex?
 
 A: Simple answer, a flag that gw.exe puts up so new gw.exe processes know to not launch. Long answer, check wikipedia.
-
-Q: How do I use Texmod with this?
-
-A: To launch a Texmoded copy:
-   # Select the copy you will be launching and click "Set Registry Path"
-   # Click "Clear Mutex"
-   # Open Texmod and launch the copy
 
 Q: How do I report a bug?
 
@@ -117,8 +123,13 @@ http://code.google.com/p/gwmultilaunch/
   * moriz - thank you for being the brave soul to test this in windows 7
   * Alexander Burn Victim - thank you for testing in vista 64-bit
   * Aciid Bu5t0r - thank you for bringing up the idea of forcefully unlocking gw.dat
+  * MithranArkanere - thank you for detailing the registry issue
 
 ==History==
+v0.5 (2009/06/12)
+  * Milestone final release. (v1.0 release supporting launching without making copies on wishlist)
+  * Fixed registry writing code to write to both CURRENT_USER and LOCAL_MACHINE if paths exist
+  
 v0.5RC (2009/05/22)
   * Dual releases now, one for 32-bit windows, one for 64-bit windows
   * Rewrote large portion of handle managing code to be 64-bit compatible

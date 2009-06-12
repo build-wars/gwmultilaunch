@@ -80,9 +80,9 @@ namespace GWMultiLaunch
             this.profilesListBox.Size = new System.Drawing.Size(382, 180);
             this.profilesListBox.TabIndex = 0;
             this.profilesListBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.profilesListBox_MouseDoubleClick);
-            this.profilesListBox.SelectedIndexChanged += new System.EventHandler(this.ProfilesListBox_SelectedIndexChanged);
-            this.profilesListBox.DragDrop += new System.Windows.Forms.DragEventHandler(this.ProfilesListBox_DragDrop);
             this.profilesListBox.DragEnter += new System.Windows.Forms.DragEventHandler(this.ProfilesListBox_DragEnter);
+            this.profilesListBox.DragDrop += new System.Windows.Forms.DragEventHandler(this.ProfilesListBox_DragDrop);
+            this.profilesListBox.SelectedIndexChanged += new System.EventHandler(this.ProfilesListBox_SelectedIndexChanged);
             // 
             // mutexButton
             // 
@@ -249,7 +249,7 @@ namespace GWMultiLaunch
             this.MinimumSize = new System.Drawing.Size(555, 365);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Guild Wars Multi-Launch (v0.5 RC)";
+            this.Text = "Guild Wars Multi-Launch (v0.5)";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
