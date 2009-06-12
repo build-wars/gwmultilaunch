@@ -11,3 +11,4 @@
 
 = Need help on =
   * Make shortcut creation not dependent on windows scripting host library
+  * For v1.0 release, I would like to add functionality to allow launching of multiple instances without making extra copies.
