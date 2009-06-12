@@ -158,19 +158,20 @@ namespace GWMultiLaunch
 
         public static string GetCurrentGuildWarsPath()
         {
-            RegistryKey localMachineKey = Registry.LocalMachine;    //for xp
-            RegistryKey currentUserKey = Registry.CurrentUser;      //for vista/7
-
+            //the path could be stored in one of two locations
+            //so we should try both.
+            RegistryKey currentUserKey = Registry.CurrentUser;      //for user installs
+            RegistryKey localMachineKey = Registry.LocalMachine;    //for machine installs
+            
             try
             {
                 RegistryKey activeKey;
 
-                activeKey = localMachineKey.OpenSubKey(GW_REG_LOCATION, false);
+                activeKey = currentUserKey.OpenSubKey(GW_REG_LOCATION, false);
 
-                //will be null for vista/windows 7
                 if (activeKey == null)
                 {
-                    activeKey = currentUserKey.OpenSubKey(GW_REG_LOCATION, false);
+                    activeKey = localMachineKey.OpenSubKey(GW_REG_LOCATION, false);
                 }
 
                 return activeKey.GetValue("Path").ToString();
@@ -388,25 +389,31 @@ namespace GWMultiLaunch
 
         public static bool SetRegistry(string gwPath)
         {
-            RegistryKey localMachineKey = Registry.LocalMachine;    //for xp
-            RegistryKey currentUserKey = Registry.CurrentUser;      //for vista/7
+            //the path could be stored in one of two locations
+            //so we should try both.
+            RegistryKey currentUserKey = Registry.CurrentUser;      //for user installs
+            RegistryKey localMachineKey = Registry.LocalMachine;    //for machine installs
 
             try
             {
                 RegistryKey activeKey;
 
-                activeKey = localMachineKey.OpenSubKey(GW_REG_LOCATION, true);
-
-                //will be null for vista/windows 7
-                if (activeKey == null)
+                activeKey = currentUserKey.OpenSubKey(GW_REG_LOCATION, true);
+                if (activeKey != null)
                 {
-                    activeKey = currentUserKey.OpenSubKey(GW_REG_LOCATION, true);
+                    activeKey.SetValue("Path", gwPath);
+                    activeKey.SetValue("Src", gwPath);
+                    activeKey.Close();
                 }
 
-                activeKey.SetValue("Path", gwPath);
-                activeKey.SetValue("Src", gwPath);
-
-                activeKey.Close();
+                activeKey = localMachineKey.OpenSubKey(GW_REG_LOCATION, true);
+                if (activeKey != null)
+                {
+                    activeKey.SetValue("Path", gwPath);
+                    activeKey.SetValue("Src", gwPath);
+                    activeKey.Close();
+                }
+                
             }
             catch (Exception)
             {
