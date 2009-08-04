@@ -26,13 +26,17 @@ namespace GWMultiLaunch
     {
         private const string GWML_PREFIX = "Guild War ML-";
 
-        public static bool CreateDesktopShortcut(string path, string gwPath, string gwArg)
+        public static bool CreateDesktopShortcut(string path, string gwPath, string gwArg, string shortcutPath)
         {
             bool success = false;
 
             string arg = "\"" + gwPath + "\"" + " " + "\"" + gwArg + "\"";
 
-            string shortcutPath = GetUnusedShortcutPath();
+            if (shortcutPath == string.Empty)
+            {
+                shortcutPath = GetUnusedShortcutPath();
+            }
+
             if (shortcutPath == string.Empty) return false;
             
             try
@@ -42,7 +46,16 @@ namespace GWMultiLaunch
                 shortcut.TargetPath = path;
                 shortcut.Arguments = arg;
                 shortcut.WorkingDirectory = Directory.GetParent(path).FullName;
-                shortcut.IconLocation = gwPath + ", 0";
+
+                if (gwPath == Form1.GW_AUTO_SWITCH)
+                {
+                    shortcut.IconLocation = path + ", 0";
+                }
+                else
+                {
+                    shortcut.IconLocation = gwPath + ", 0";
+                }
+
                 shortcut.Save();
                 success = true;
             }
