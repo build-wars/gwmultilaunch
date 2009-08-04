@@ -34,6 +34,7 @@ namespace GWMultiLaunch
 
         public const string DEFAULT_ARGUMENT = "-windowed";
         public const string ERROR_CAPTION = "GWMultiLaunch Error";
+        public const string GW_AUTO_SWITCH = "-auto";
         private const string MUTEX_MATCH_STRING = "AN-Mutex-Window";
         private const string GW_REG_LOCATION = "SOFTWARE\\ArenaNet\\Guild Wars";
         private const string GW_PROCESS_NAME = "Gw";
@@ -222,7 +223,7 @@ namespace GWMultiLaunch
             }
         }
 
-        private static bool IsCopyRunning(string path)
+        public static bool IsCopyRunning(string path)
         {
             //get list of currently running system processes
             Process[] processList = Process.GetProcesses();
@@ -312,9 +313,9 @@ namespace GWMultiLaunch
 
                 success = true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                MessageBox.Show("Error launching: " + path + "!",
+                MessageBox.Show("Error launching: " + path + "!\n" + e.Message,
                     ERROR_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
@@ -719,13 +720,27 @@ namespace GWMultiLaunch
             {
                 arg = mFileCloset.GetArgument(path);
 
-                if (ShortcutCreator.CreateDesktopShortcut(gwmlPath, path, arg))
+                if (ShortcutCreator.CreateDesktopShortcut(gwmlPath, path, arg, string.Empty))
                 {
                     nShortcutsCreated++;
                 }
             }
 
             MessageBox.Show(nShortcutsCreated.ToString() + " Desktop shortcuts were created!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void automodeButton_Click(object sender, EventArgs e)
+        {
+            string gwmlPath = System.Windows.Forms.Application.ExecutablePath;
+            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+            desktopPath += "\\" + "Guild War ML-X" + ".lnk";
+
+            if (ShortcutCreator.CreateDesktopShortcut(gwmlPath,
+                Form1.GW_AUTO_SWITCH, "", desktopPath))
+            {
+                MessageBox.Show("Master shortcut created!", 
+                    "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
         private void TexmodButton_Click(object sender, EventArgs e)

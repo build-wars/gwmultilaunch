@@ -62,6 +62,7 @@ namespace GWMultiLaunch
             this.shortcutButton = new System.Windows.Forms.Button();
             this.makeCopyButton = new System.Windows.Forms.Button();
             this.launchButton = new System.Windows.Forms.Button();
+            this.automodeButton = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -195,9 +196,9 @@ namespace GWMultiLaunch
             this.shortcutButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.shortcutButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.shortcutButton.Enabled = false;
-            this.shortcutButton.Location = new System.Drawing.Point(411, 242);
+            this.shortcutButton.Location = new System.Drawing.Point(411, 240);
             this.shortcutButton.Name = "shortcutButton";
-            this.shortcutButton.Size = new System.Drawing.Size(124, 84);
+            this.shortcutButton.Size = new System.Drawing.Size(124, 40);
             this.shortcutButton.TabIndex = 12;
             this.shortcutButton.Text = "Make Shortcut";
             this.toolTip1.SetToolTip(this.shortcutButton, "Make multi-launch enabled desktop shortcut.");
@@ -231,11 +232,25 @@ namespace GWMultiLaunch
             this.launchButton.UseVisualStyleBackColor = false;
             this.launchButton.Click += new System.EventHandler(this.LaunchButton_Click);
             // 
+            // automodeButton
+            // 
+            this.automodeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.automodeButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.automodeButton.Location = new System.Drawing.Point(411, 286);
+            this.automodeButton.Name = "automodeButton";
+            this.automodeButton.Size = new System.Drawing.Size(124, 40);
+            this.automodeButton.TabIndex = 15;
+            this.automodeButton.Text = "Make Master Shortcut";
+            this.toolTip1.SetToolTip(this.automodeButton, "Make multi-launch enabled desktop shortcut.");
+            this.automodeButton.UseVisualStyleBackColor = false;
+            this.automodeButton.Click += new System.EventHandler(this.automodeButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(547, 338);
+            this.Controls.Add(this.automodeButton);
             this.Controls.Add(this.makeCopyButton);
             this.Controls.Add(this.launchButton);
             this.Controls.Add(this.shortcutButton);
@@ -249,7 +264,7 @@ namespace GWMultiLaunch
             this.MinimumSize = new System.Drawing.Size(555, 365);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Guild Wars Multi-Launch (v0.5)";
+            this.Text = "Guild Wars Multi-Launch (v0.6 beta)";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
@@ -273,6 +288,7 @@ namespace GWMultiLaunch
         private System.Windows.Forms.Button texmodButton;
         private System.Windows.Forms.Button makeCopyButton;
         private System.Windows.Forms.CheckBox forceLaunchCheckBox;
+        private System.Windows.Forms.Button automodeButton;
     }
 }
 

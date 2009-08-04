@@ -18,6 +18,8 @@
 
 using System;
 using System.IO;
+using System.Diagnostics;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace GWMultiLaunch
@@ -34,30 +36,30 @@ namespace GWMultiLaunch
 
             if (args.Length >= 1)
             {
-                // Shortcut launching mode
-                string pathToLaunch = args[0];
-                string pathArgs = string.Empty;
+                // Shortcut launching modes
 
-                if (args.Length >= 2)
-                {
-                    pathArgs = args[1];
-                }
+                string firstArgument = args[0];
 
-                //validate path
-                if (!File.Exists(pathToLaunch))
+                //auto mode?
+                bool autoMode = firstArgument.Equals(Form1.GW_AUTO_SWITCH, StringComparison.OrdinalIgnoreCase);
+
+                if (autoMode)
                 {
-                    MessageBox.Show("The path: " + pathToLaunch + " does not exist! Check the shortcut arguments.", 
-                        Form1.ERROR_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    //launch by trying paths in the ini file
+                    LaunchCycler(fileCloset);
                 }
                 else
                 {
-                    //set new gw path
-                    Form1.SetRegistry(pathToLaunch);
+                    string pathArgs = string.Empty;
 
-                    //attempt to launch
-                    Form1.LaunchGame(pathToLaunch, pathArgs, false);
+                    if (args.Length >= 2)
+                    {
+                        pathArgs = args[1];
+                    }
+
+                    LaunchByArguments(firstArgument, pathArgs);
                 }
-
+                
                 Environment.Exit(0);
             }
             else
@@ -66,6 +68,47 @@ namespace GWMultiLaunch
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
                 Application.Run(new Form1(fileCloset));
+            }
+        }
+
+        static void LaunchByArguments(string pathToLaunch, string pathArgs)
+        {
+            //validate path
+            if (!File.Exists(pathToLaunch))
+            {
+                MessageBox.Show("The path: " + pathToLaunch + " does not exist!",
+                    Form1.ERROR_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                //set new gw path
+                Form1.SetRegistry(pathToLaunch);
+
+                //attempt to launch
+                Form1.LaunchGame(pathToLaunch, pathArgs, false);
+            }
+        }
+
+        static void LaunchCycler(FileManager fileCloset)
+        {
+            bool copyLaunched = false;
+
+            foreach (KeyValuePair<string, string> i in fileCloset.Profiles)
+            {
+                String currentPath = i.Key;
+                if (Form1.IsCopyRunning(currentPath) == false)
+                {
+                    LaunchByArguments(currentPath, i.Value);
+                    copyLaunched = true;
+                    break;
+                }
+            }
+
+            if (copyLaunched == false)
+            {
+                MessageBox.Show("No more copies left to launch. Add more copies to GWMultilaunch.", 
+                    "Unable to launch more copies.", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
     }
