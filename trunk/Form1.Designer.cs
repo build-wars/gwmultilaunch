@@ -243,7 +243,7 @@ namespace GWMultiLaunch
             this.automodeButton.Text = "Make Master Shortcut";
             this.toolTip1.SetToolTip(this.automodeButton, "Make multi-launch enabled desktop shortcut.");
             this.automodeButton.UseVisualStyleBackColor = false;
-            this.automodeButton.Click += new System.EventHandler(this.automodeButton_Click);
+            this.automodeButton.Click += new System.EventHandler(this.AutomodeButton_Click);
             // 
             // Form1
             // 

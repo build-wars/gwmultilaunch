@@ -22,44 +22,64 @@ using IWshRuntimeLibrary;
 
 namespace GWMultiLaunch
 {
-    class ShortcutCreator
+    public class ShortcutCreator
     {
-        private const string GWML_PREFIX = "Guild War ML-";
+        /// <summary>
+        /// Create shortcut for launching specified Guild Wars install.
+        /// </summary>
+        /// <param name="gwPath">Path to Guild Wars executable.</param>
+        /// <param name="gwArgs">Arguments to pass to Guild Wars.</param>
+        /// <returns></returns>
+        public static bool CreateSingleLaunchShortcut(string gwPath, string gwArgs)
+        {
+            string desktopFolder = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+            string pathLink = GetUnusedFilePath(desktopFolder, Form1.SHORTCUT_PREFIX);
+            string targetPath = System.Windows.Forms.Application.ExecutablePath;
+            string arguments = "\"" + gwPath + "\"" + " " + "\"" + gwArgs + "\"";
+            string iconLocation = gwPath + ", 0";
 
-        public static bool CreateDesktopShortcut(string path, string gwPath, string gwArg, string shortcutPath)
+            return CreateShortcut(pathLink, targetPath, arguments, iconLocation);
+        }
+
+        /// <summary>
+        /// Create master shortcut for launching.
+        /// </summary>
+        /// <returns></returns>
+        public static bool CreateMasterShortcut()
+        {
+            string desktopFolder = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+            string pathLink = desktopFolder + "\\" + Form1.AUTO_LAUNCH_SHORTCUT + ".lnk";
+            string targetPath = System.Windows.Forms.Application.ExecutablePath;
+            string arguments = Form1.AUTO_LAUNCH_SWITCH;
+            string iconLocation = targetPath + ", 0";
+
+            return CreateShortcut(pathLink, targetPath, arguments, iconLocation);
+        }
+
+        /// <summary>
+        /// Create shortcut.
+        /// </summary>
+        /// <param name="pathLink">Full path for new shortcut file.</param>
+        /// <param name="targetPath">Shortcut target.</param>
+        /// <param name="arguments">Arguments to pass to shortcut target.</param>
+        /// <param name="iconLocation">Location of icon.</param>
+        /// <returns></returns>
+        private static bool CreateShortcut(string pathLink, string targetPath, string arguments, string iconLocation)
         {
             bool success = false;
 
-            string arg = "\"" + gwPath + "\"" + " " + "\"" + gwArg + "\"";
-
-            if (shortcutPath == string.Empty)
-            {
-                shortcutPath = GetUnusedShortcutPath();
-            }
-
-            if (shortcutPath == string.Empty) return false;
-            
             try
             {
                 WshShell shell = new WshShell();
-                IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(shortcutPath);
-                shortcut.TargetPath = path;
-                shortcut.Arguments = arg;
-                shortcut.WorkingDirectory = Directory.GetParent(path).FullName;
-
-                if (gwPath == Form1.GW_AUTO_SWITCH)
-                {
-                    shortcut.IconLocation = path + ", 0";
-                }
-                else
-                {
-                    shortcut.IconLocation = gwPath + ", 0";
-                }
-
+                IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(pathLink);
+                shortcut.TargetPath = targetPath;
+                shortcut.Arguments = arguments;
+                shortcut.WorkingDirectory = Directory.GetParent(targetPath).FullName;
+                shortcut.IconLocation = iconLocation;
                 shortcut.Save();
                 success = true;
             }
-            catch (Exception e) 
+            catch (Exception e)
             {
                 System.Windows.Forms.MessageBox.Show(e.Message);
             }
@@ -67,39 +87,54 @@ namespace GWMultiLaunch
             return success;
         }
 
-        public static string GetShortcutTarget(string shortcutFile)
+        /// <summary>
+        /// Retrieves the target of specified shortcut.
+        /// </summary>
+        /// <param name="pathLink">Full path to shortcut file.</param>
+        /// <returns></returns>
+        public static string GetShortcutTarget(string pathLink)
         {
             IWshShell shell = new WshShell();
 
-            IWshShortcut tmpShortcut = (IWshShortcut)shell.CreateShortcut(shortcutFile);
+            IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(pathLink);
 
-            return tmpShortcut.TargetPath;
+            return shortcut.TargetPath;
         }
 
-        public static string GetShortcutArguments(string shortcutFile)
+        /// <summary>
+        /// Retrieves the arguments of specified shortcut.
+        /// </summary>
+        /// <param name="pathLink">Full path to shortcut file.</param>
+        /// <returns></returns>
+        public static string GetShortcutArguments(string pathLink)
         {
             IWshShell shell = new WshShell();
 
-            IWshShortcut tmpShortcut = (IWshShortcut)shell.CreateShortcut(shortcutFile);
+            IWshShortcut tmpShortcut = (IWshShortcut)shell.CreateShortcut(pathLink);
 
             return tmpShortcut.Arguments;
         }
 
-        private static string GetUnusedShortcutPath()
+        /// <summary>
+        /// Retrieve full path to unused filename in speicfied folder.
+        /// </summary>
+        /// <param name="folder">Folder to check.</param>
+        /// <param name="filenamePrefix">Prefix to use in constructing filename.</param>
+        /// <returns></returns>
+        private static string GetUnusedFilePath(string folder, string filenamePrefix)
         {
-            string name = string.Empty;
-            string pathToCheck = string.Empty;
-            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+            string filename = string.Empty;
+            string filePath = string.Empty;
 
             //there should not be over 100.. of these icons...
             for (int i = 1; i < 100; i++)
             {
-                name = GWML_PREFIX + i.ToString();
-                pathToCheck = desktopPath + "\\" + name + ".lnk";
+                filename = filenamePrefix + i.ToString();
+                filePath = folder + "\\" + filename + ".lnk";
 
-                if (!System.IO.File.Exists(pathToCheck))
+                if (System.IO.File.Exists(filePath) == false)
                 {
-                    return pathToCheck;
+                    return filePath;
                 }
             }
 
