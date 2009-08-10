@@ -24,11 +24,17 @@ namespace GWMultiLaunch
 {
     public class FileCopier
     {
+        #region Native Method Signatures
+
         [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
         private static extern int SHFileOperation([In] ref SHFILEOPSTRUCT lpFileOp);
 
+        #endregion
+
+        #region Structures
+
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        struct SHFILEOPSTRUCT
+        private struct SHFILEOPSTRUCT
         {
             public IntPtr hwnd;
             public FILE_OP_TYPE wFunc;
@@ -44,7 +50,11 @@ namespace GWMultiLaunch
             public string lpszProgressTitle;
         }
 
-        public enum FILE_OP_TYPE : uint
+        #endregion
+
+        #region Enumerations
+
+        private enum FILE_OP_TYPE : uint
         {
             FO_MOVE     = 0x0001,
             FO_COPY     = 0x0002,
@@ -73,7 +83,16 @@ namespace GWMultiLaunch
             FOF_NORECURSEREPARSE        = 0x8000,
         }
 
-        public static bool CopyFiles(string from, string to)
+        #endregion
+
+        #region Functions
+
+        public static bool CopyFiles(List<string> from, List<string> to)
+        {
+            return CopyFiles(ConstructFilenamesString(from), ConstructFilenamesString(to));
+        }
+
+        private static bool CopyFiles(string from, string to)
         {
             bool success = false;
 
@@ -87,7 +106,10 @@ namespace GWMultiLaunch
             lpFileOp.hNameMappings = IntPtr.Zero;
             lpFileOp.lpszProgressTitle = string.Empty;
 
+            //do copy operation and store result
             int result = SHFileOperation(ref lpFileOp);
+
+            //we also need to check for user aborted operations
             if (result == 0)
             {
                 success = !lpFileOp.fAnyOperationsAborted;
@@ -96,20 +118,26 @@ namespace GWMultiLaunch
             return success;
         }
 
-        public static string TranslateStringList(List<string> filenames)
+        private static string ConstructFilenamesString(List<string> filenames)
         {
-            string result = string.Empty;
+            //Filename limit for Windows XP is 255 chars
+            //255 * number of files should give more than enough initial size
+            System.Text.StringBuilder result = new System.Text.StringBuilder(255 * filenames.Count);
 
-            foreach (string filename in filenames)
+            foreach (string file in filenames)
             {
-                result = result + filename + "\0";
+                result.Append(file);
+
+                //each filename must be separated by a null
+                result.Append("\0");
             }
 
-            result = result + "\0";     //needs to be doubly null terminated
+            result.Append("\0");     //needs to be doubly null terminated
 
-            return result;
+            return result.ToString();
         }
 
+        #endregion
     }
 
 }

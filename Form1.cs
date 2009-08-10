@@ -33,8 +33,11 @@ namespace GWMultiLaunch
         #region Constants
 
         public const string DEFAULT_ARGUMENT = "-windowed";
+        public const string SHORTCUT_PREFIX = "Guild Wars ML-";
+        public const string AUTO_LAUNCH_SWITCH = "-auto";
+        public const string AUTO_LAUNCH_SHORTCUT = "Guild Wars ML-X";
         public const string ERROR_CAPTION = "GWMultiLaunch Error";
-        public const string GW_AUTO_SWITCH = "-auto";
+
         private const string MUTEX_MATCH_STRING = "AN-Mutex-Window";
         private const string GW_REG_LOCATION = "SOFTWARE\\ArenaNet\\Guild Wars";
         private const string GW_PROCESS_NAME = "Gw";
@@ -46,23 +49,23 @@ namespace GWMultiLaunch
 
         #region Member Variables
 
-        private FileManager mFileCloset;
+        private SettingsManager mSettings;
         private string mSelectedPath;
 
         #endregion
 
         #region Functions
 
-        public Form1(FileManager fileCloset)
+        public Form1(SettingsManager fileCloset)
         {
             InitializeComponent();
 
-            mFileCloset = fileCloset;
+            mSettings = fileCloset;
             mSelectedPath = string.Empty;
 
             InitializeInstallList();
 
-            if (!mFileCloset.ForceUnlock)
+            if (!mSettings.ForceUnlock)
             {
                 forceLaunchCheckBox.Checked = false;
             }
@@ -93,7 +96,7 @@ namespace GWMultiLaunch
             if (!profilesListBox.Items.Contains(pathToAdd))
             {
                 //add to file
-                mFileCloset.AddProfile(pathToAdd, pathArg);
+                mSettings.AddProfile(pathToAdd, pathArg);
 
                 //add to list
                 int index = profilesListBox.Items.Add(pathToAdd);
@@ -211,13 +214,13 @@ namespace GWMultiLaunch
         private void InitializeInstallList()
         {
             //Populate listbox with installs
-            foreach (KeyValuePair<string, string> i in mFileCloset.Profiles)
+            foreach (KeyValuePair<string, string> i in mSettings.Profiles)
             {
                 profilesListBox.Items.Add(i.Key);
             }
 
             //Select Proper Items
-            foreach (int i in mFileCloset.SelectedIndices)
+            foreach (int i in mSettings.SelectedIndices)
             {
                 profilesListBox.SelectedIndices.Add(i);
             }
@@ -274,10 +277,10 @@ namespace GWMultiLaunch
                 }
 
                 //attempt to launch
-                if (LaunchGame(path, mFileCloset.GetArgument(path), forced))
+                if (LaunchGame(path, mSettings.GetArgument(path), forced))
                 {
                     //give time for gw to read value before it gets changed again.
-                    System.Threading.Thread.Sleep(mFileCloset.RegistryCooldown);
+                    System.Threading.Thread.Sleep(mSettings.RegistryCooldown);
                 }
             }
         }
@@ -367,14 +370,16 @@ namespace GWMultiLaunch
                     }
 
                     //translate to destination paths
-                    destFileList = TranslateToDest(sourceFileList, sourceFolder, destFolder);
-
-                    //translate string array to single string
-                    string from = FileCopier.TranslateStringList(sourceFileList);
-                    string to = FileCopier.TranslateStringList(destFileList);
+                    destFileList = GetDestFileList(sourceFileList, sourceFolder, destFolder);
 
                     //lets do the copying
-                    success = FileCopier.CopyFiles(from, to);
+                    success = FileCopier.CopyFiles(sourceFileList, destFileList);
+                }
+                else
+                {
+                    MessageBox.Show("Error, cannot copy to the same directory.", ERROR_CAPTION, 
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    success = false;
                 }
             }
             catch (Exception e)
@@ -424,7 +429,7 @@ namespace GWMultiLaunch
             return true;
         }
 
-        private List<string> TranslateToDest(List<string> sourceFileList, string sourceFolder, string destFolder)
+        private List<string> GetDestFileList(List<string> sourceFileList, string sourceFolder, string destFolder)
         {
             List<string> destFileList = new List<string>();
 
@@ -457,7 +462,7 @@ namespace GWMultiLaunch
         {
             if (mSelectedPath != string.Empty)
             {
-                mFileCloset.UpdateProfile(mSelectedPath, argumentsTextBox.Text);
+                mSettings.UpdateProfile(mSelectedPath, argumentsTextBox.Text);
             }
         }
 
@@ -479,12 +484,12 @@ namespace GWMultiLaunch
                 }
                 else
                 {
-                    mFileCloset.ForceUnlock = true;
+                    mSettings.ForceUnlock = true;
                 }
             }
             else
             {
-                mFileCloset.ForceUnlock = false;
+                mSettings.ForceUnlock = false;
             }
         }
 
@@ -622,7 +627,7 @@ namespace GWMultiLaunch
             //update launch arguments box of previous item
             if (mSelectedPath != string.Empty)
             {
-                mFileCloset.UpdateProfile(mSelectedPath, argumentsTextBox.Text);
+                mSettings.UpdateProfile(mSelectedPath, argumentsTextBox.Text);
             }
 
             argumentsTextBox.Text = string.Empty;
@@ -641,14 +646,14 @@ namespace GWMultiLaunch
 
                 int[] indicesArr = new int[profilesListBox.SelectedIndices.Count];
                 profilesListBox.SelectedIndices.CopyTo(indicesArr, 0);
-                mFileCloset.SelectedIndices = indicesArr;
+                mSettings.SelectedIndices = indicesArr;
             }
             else if (profilesListBox.SelectedIndices.Count == 1)
             {
                 //one item selected
                 mSelectedPath = profilesListBox.SelectedItem.ToString();
                 argumentsTextBox.Enabled = true;
-                argumentsTextBox.Text = mFileCloset.GetArgument(mSelectedPath);
+                argumentsTextBox.Text = mSettings.GetArgument(mSelectedPath);
 
                 regButton.Enabled = true;
                 removeCopyButton.Enabled = true;
@@ -656,7 +661,7 @@ namespace GWMultiLaunch
                 launchButton.Enabled = true;
                 shortcutButton.Enabled = true;
 
-                mFileCloset.SelectedIndices = new int[] { profilesListBox.SelectedIndex };
+                mSettings.SelectedIndices = new int[] { profilesListBox.SelectedIndex };
             }
             else
             {
@@ -670,7 +675,7 @@ namespace GWMultiLaunch
                 launchButton.Enabled = false;
                 shortcutButton.Enabled = false;
 
-                mFileCloset.SelectedIndices = new int[0];
+                mSettings.SelectedIndices = new int[0];
             }
         }
 
@@ -701,7 +706,7 @@ namespace GWMultiLaunch
                 foreach (string selectedInstall in selectedInstalls)
                 {
                     //remove from file
-                    mFileCloset.RemoveProfile(selectedInstall);
+                    mSettings.RemoveProfile(selectedInstall);
 
                     //remove from list
                     mSelectedPath = string.Empty;
@@ -713,30 +718,25 @@ namespace GWMultiLaunch
         private void ShortcutButton_Click(object sender, EventArgs e)
         {
             int nShortcutsCreated = 0;
-            string gwmlPath = System.Windows.Forms.Application.ExecutablePath;
-            string arg = string.Empty;
-
-            foreach (string path in profilesListBox.SelectedItems)
+            string gwArgs = string.Empty;
+            
+            foreach (string gwPath in profilesListBox.SelectedItems)
             {
-                arg = mFileCloset.GetArgument(path);
+                gwArgs = mSettings.GetArgument(gwPath);
 
-                if (ShortcutCreator.CreateDesktopShortcut(gwmlPath, path, arg, string.Empty))
+                if (ShortcutCreator.CreateSingleLaunchShortcut(gwPath, gwArgs))
                 {
                     nShortcutsCreated++;
                 }
             }
 
-            MessageBox.Show(nShortcutsCreated.ToString() + " Desktop shortcuts were created!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(nShortcutsCreated.ToString() + " Desktop shortcuts were created!", "Info", 
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void automodeButton_Click(object sender, EventArgs e)
+        private void AutomodeButton_Click(object sender, EventArgs e)
         {
-            string gwmlPath = System.Windows.Forms.Application.ExecutablePath;
-            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-            desktopPath += "\\" + "Guild War ML-X" + ".lnk";
-
-            if (ShortcutCreator.CreateDesktopShortcut(gwmlPath,
-                Form1.GW_AUTO_SWITCH, "", desktopPath))
+            if (ShortcutCreator.CreateMasterShortcut())
             {
                 MessageBox.Show("Master shortcut created!", 
                     "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -748,7 +748,7 @@ namespace GWMultiLaunch
             string texmodPath = string.Empty;
 
             //check for path from ini
-            string iniTextmodPath = mFileCloset.TexmodPath;
+            string iniTextmodPath = mSettings.TexmodPath;
 
             if (File.Exists(iniTextmodPath))
             {
@@ -804,13 +804,13 @@ namespace GWMultiLaunch
                     //write path to ini
                     if (iniTextmodPath != texmodPath)
                     {
-                        mFileCloset.TexmodPath = texmodPath;
+                        mSettings.TexmodPath = texmodPath;
                     }
                 }
                 else
                 {
                     //remove path from ini
-                    mFileCloset.TexmodPath = string.Empty;
+                    mSettings.TexmodPath = string.Empty;
                 }
             }
         }

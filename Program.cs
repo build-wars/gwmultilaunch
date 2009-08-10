@@ -18,7 +18,6 @@
 
 using System;
 using System.IO;
-using System.Diagnostics;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
@@ -32,79 +31,113 @@ namespace GWMultiLaunch
         [STAThread]
         static void Main(string[] args)
         {
-            FileManager fileCloset = new FileManager();
+            SettingsManager settings = new SettingsManager();
 
             if (args.Length >= 1)
             {
-                // Shortcut launching modes
-
-                string firstArgument = args[0];
-
-                //auto mode?
-                bool autoMode = firstArgument.Equals(Form1.GW_AUTO_SWITCH, StringComparison.OrdinalIgnoreCase);
-
-                if (autoMode)
-                {
-                    //launch by trying paths in the ini file
-                    LaunchCycler(fileCloset);
-                }
-                else
-                {
-                    string pathArgs = string.Empty;
-
-                    if (args.Length >= 2)
-                    {
-                        pathArgs = args[1];
-                    }
-
-                    LaunchByArguments(firstArgument, pathArgs);
-                }
-                
-                Environment.Exit(0);
+                HandleArguments(settings, args);
             }
             else
             {
-                // Launch GUI
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new Form1(fileCloset));
+                LaunchGUI(settings);
             }
         }
 
-        static void LaunchByArguments(string pathToLaunch, string pathArgs)
+        /// <summary>
+        /// Altered functionality depending on arguments.
+        /// </summary>
+        /// <param name="settings">An initialized SettingsManager.</param>
+        /// <param name="programArgs">GWMultiLaunch arguments.</param>
+        static void HandleArguments(SettingsManager settings, string[] programArgs)
         {
-            //validate path
-            if (!File.Exists(pathToLaunch))
+            string firstArgument = programArgs[0];
+
+            bool autoLaunch = firstArgument.Equals(Form1.AUTO_LAUNCH_SWITCH, StringComparison.OrdinalIgnoreCase);
+
+            if (autoLaunch)
+            {
+                //launch by trying gw paths in the ini file
+                LaunchByList(settings);
+            }
+            else
+            {
+                string gwArgs = GetGWLaunchArguments(programArgs);
+                LaunchByArguments(firstArgument, gwArgs);
+            }
+        }
+
+        /// <summary>
+        /// Launch the GUI
+        /// </summary>
+        /// <param name="settings">An initialized SettingsManager.</param>
+        static void LaunchGUI(SettingsManager settings)
+        {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new Form1(settings));
+        }
+
+        /// <summary>
+        /// Retrieves Guild Wars launch arguments. Locates it as the second argument passed to GWMultiLaunch.
+        /// </summary>
+        /// <param name="programArgs">GWMultiLaunch arguments.</param>
+        /// <returns>GW launch arguments. Empty string if none found.</returns>
+        static string GetGWLaunchArguments(string[] programArgs)
+        {
+            string gwLaunchArgs = string.Empty;
+
+            if (programArgs.Length >= 2)
+            {
+                gwLaunchArgs = programArgs[1];
+            }
+
+            return gwLaunchArgs;
+        }
+
+        /// <summary>
+        /// Sets registry and attempts to launch Guild Wars with specified launch arguments.
+        /// </summary>
+        /// <param name="pathToLaunch">Path to Guild Wars executable.</param>
+        /// <param name="launchArgs">Guild Wars launch arguments.</param>
+        static void LaunchByArguments(string pathToLaunch, string launchArgs)
+        {
+            //check if path exists
+            if (File.Exists(pathToLaunch) == false)
             {
                 MessageBox.Show("The path: " + pathToLaunch + " does not exist!",
                     Form1.ERROR_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {
-                //set new gw path
+                //set path in registry
                 Form1.SetRegistry(pathToLaunch);
 
                 //attempt to launch
-                Form1.LaunchGame(pathToLaunch, pathArgs, false);
+                Form1.LaunchGame(pathToLaunch, launchArgs, false);
             }
         }
 
-        static void LaunchCycler(FileManager fileCloset)
+        /// <summary>
+        /// Iterates through the Guild Wars copies list and attempts to launch new copy.
+        /// </summary>
+        /// <param name="settings">An initialized SettingsManager.</param>
+        static void LaunchByList(SettingsManager settings)
         {
-            bool copyLaunched = false;
+            bool launchAttempted = false;
 
-            foreach (KeyValuePair<string, string> i in fileCloset.Profiles)
+            foreach (KeyValuePair<string, string> i in settings.Profiles)
             {
                 String currentPath = i.Key;
+
                 if (Form1.IsCopyRunning(currentPath) == false)
                 {
                     LaunchByArguments(currentPath, i.Value);
-                    copyLaunched = true;
+                    launchAttempted = true;
                     break;
                 }
             }
 
-            if (copyLaunched == false)
+            if (launchAttempted == false)
             {
                 MessageBox.Show("No more copies left to launch. Add more copies to GWMultilaunch.", 
                     "Unable to launch more copies.", 

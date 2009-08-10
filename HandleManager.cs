@@ -17,7 +17,6 @@
 //along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.IO;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
@@ -151,7 +150,7 @@ namespace GWMultiLaunch
 
         //NtQueryInformationFile
         [Flags]
-        enum FILE_INFORMATION_CLASS
+        private enum FILE_INFORMATION_CLASS
         {
             FileNameInformation = 9
         } //partial enum, actual set is huge, google SYSTEM_INFORMATION_CLASS
@@ -336,6 +335,12 @@ namespace GWMultiLaunch
             return processHandles;
         }
 
+        /// <summary>
+        /// Queries for file name associated with handle.
+        /// </summary>
+        /// <param name="handleInfo">The handle info.</param>
+        /// <param name="hProcess">Open handle to the process which owns that handle.</param>
+        /// <returns></returns>
         private static string GetFileName(SYSTEM_HANDLE_INFORMATION handleInfo, IntPtr hProcess)
         {
             try
@@ -370,7 +375,6 @@ namespace GWMultiLaunch
                 Marshal.FreeHGlobal(pFileNameBuffer);
 
                 return fileName;
-
             }
             catch (Exception)
             {

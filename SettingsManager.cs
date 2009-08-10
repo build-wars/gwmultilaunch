@@ -24,7 +24,7 @@ using System.Runtime.InteropServices;
 
 namespace GWMultiLaunch
 {
-    public class FileManager
+    public class SettingsManager
     {
         #region Native Method Signatures
 
@@ -40,10 +40,6 @@ namespace GWMultiLaunch
         [DllImport("kernel32.dll")]
         private static extern bool WritePrivateProfileSection(string lpAppName,
            string lpString, string lpFileName);
-
-        [DllImport("kernel32.dll")]
-        public static extern bool QueryDosDevice(string lpDeviceName, 
-            [Out] StringBuilder lpTargetPath, uint ucchMax);
         
         #endregion
 
@@ -71,7 +67,7 @@ namespace GWMultiLaunch
         private const string SELECTED_KEY_NAME = "selected";
         private const string PROFILE_KEY_NAME = "copy";
         private const char NUM_SPLIT_CHAR = ',';
-        private const char PATHARG_SPLIT_CHAR = '|';
+        private const char PATH_ARG_SPLIT_CHAR = '|';
 
         private LaunchProfiles mProfiles;
         private string mINIFilePath;
@@ -115,14 +111,14 @@ namespace GWMultiLaunch
 
         #region Functions
 
-        public FileManager()
+        public SettingsManager()
         {
             mINIFilePath = Directory.GetCurrentDirectory() + "\\" + INI_FILENAME;
  
             Load();
         }
 
-        ~FileManager()
+        ~SettingsManager()
         {
             Save();
         }
@@ -277,7 +273,7 @@ namespace GWMultiLaunch
                 }
                 else
                 {
-                    string[] values = value.Split(PATHARG_SPLIT_CHAR);
+                    string[] values = value.Split(PATH_ARG_SPLIT_CHAR);
 
                     if (values.Length < 2)
                     {
@@ -326,7 +322,7 @@ namespace GWMultiLaunch
             foreach (KeyValuePair<string, string> kvp in mProfiles.Profiles)
             {
                 key = PROFILE_KEY_NAME + j.ToString();
-                value = kvp.Key + PATHARG_SPLIT_CHAR + kvp.Value;
+                value = kvp.Key + PATH_ARG_SPLIT_CHAR + kvp.Value;
 
                 WriteINIValue(PROFILES_SECTION, key, value, mINIFilePath);
                 
