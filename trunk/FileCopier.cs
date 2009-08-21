@@ -22,7 +22,7 @@ using System.Runtime.InteropServices;
 
 namespace GWMultiLaunch
 {
-    public class FileCopier
+    public static class FileCopier
     {
         #region Native Method Signatures
 
