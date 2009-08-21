@@ -17,10 +17,11 @@ Launch multiple copies of Guild Wars.
   # Make copies of the Guild Wars folder
   # Add the gw.exe(s) to the list
   # Launch or make special shortcut for launching
-
-  * Vista/Win7: May need to start GWML as admin
-  * GW Updates: Start a copy and wait for update to finish before launching another copy.
-  * Texmod: See the FAQ section.
+  
+  * Notes
+    * Vista/Win7: May need to start GWML as admin
+    * GW Updates: Start a copy and wait for update to finish before launching another copy.
+    * Texmod: See the FAQ section.
 
 ==Basic Controls==
 
