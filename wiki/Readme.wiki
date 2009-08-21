@@ -14,9 +14,9 @@ Launch multiple copies of Guild Wars.
   
 ==Usage==
 
-  1. Make copies of the Guild Wars folder
-  2. Add the gw.exe(s) to the list
-  3. Launch or make special shortcut for launching
+  # Make copies of the Guild Wars folder
+  # Add the gw.exe(s) to the list
+  # Launch or make special shortcut for launching
 
 Vista/Win7: May need to start GWML as admin
 GW Updates: Start a copy and wait for update to finish before launching another copy.
@@ -40,9 +40,9 @@ Texmod: See the FAQ section.
 
 ==Launch Sequence==
 
-  1. Set Registry Path
-  2. Mutex cleared from all gw.exe processes
-  3. Launch gw copy
+  # Set Registry Path
+  # Mutex cleared from all gw.exe processes
+  # Launch gw copy
 
 ==FAQ==
 
