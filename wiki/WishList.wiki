@@ -2,7 +2,7 @@
 #labels Featured,Phase-Requirements,Phase-Design
 
 = Need help on =
-  * Make shortcut creation not dependent on windows scripting host library
+  * Make shortcut creation independent of Windows scripting host library
   * For v1.0 release, I would like to add functionality to allow launching of multiple instances without making extra copies.
 
 = Recently implemented =
