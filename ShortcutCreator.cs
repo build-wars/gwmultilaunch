@@ -22,7 +22,7 @@ using IWshRuntimeLibrary;
 
 namespace GWMultiLaunch
 {
-    public class ShortcutCreator
+    public static class ShortcutCreator
     {
         /// <summary>
         /// Create shortcut for launching specified Guild Wars install.

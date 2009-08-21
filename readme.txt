@@ -1,11 +1,9 @@
 =Guild Wars Multi-Launch=
 
-Open Source License: GPLv3
-
-==Summary==
+==Purpose==
 
 Launch multiple copies of Guild Wars.
-(no modifications to Guild Wars files!)
+(no patching required!)
 
 ==Requirements==
 
@@ -15,64 +13,42 @@ Launch multiple copies of Guild Wars.
   
 ==Usage==
 
-Copies of the Guild Wars folder need to be made. The number of copies depends on how many copies you would like to have open at once. You will only need to make 1 extra copy to be able to run two copies side by side. (The experimental unlock gw.dat generally should only be used for quick muling sessions, it is recommended to make a full copy if you have the disk space.)
-
-After these copies are made, add them to the list. Then, make the multi-launch enabled shortcuts which are good for launching multiple copies of Guild Wars from the desktop. Or just select the game and launch it from the launcher.
-
-(If you are using Vista/7 and having trouble running multiple copies see notes further down.)
-
-Concisely:
-
-  # Make copies of the Guild Wars folder (just need gw.exe and gw.dat)
+  # Make copies of the Guild Wars folder
   # Add the gw.exe(s) to the list
-  # Double click item to launch
-    * or click "Launch" button
-    * or make a shortcut for external launching
-
-Guild Wars Updates: When there is an update, launch one copy at a time (wait until update finishes) with the launcher to ensure all copies are properly updated. See gw.dat question in the FAQ for details.
-
-Texmod Usage: Check the FAQ section.
+  # Launch or make special shortcut for launching
+  
+  * Notes
+    * Vista/Win7: May need to start GWML as admin
+    * GW Updates: Start a copy and wait for update to finish before launching another copy.
+    * Texmod: See the FAQ section.
 
 ==Basic Controls==
 
-  * Add - add the location of an existing copy
-  * Remove - remove selected copy from list
-  * Make Copy - make a copy (make sure to create new folder in dialog)
+  * Add - add an existing copy
+  * Remove - remove selected copy
+  * Make Copy - make a copy
   * Launch - start the selected copies
-  * Make Desktop Shortcut - add a desktop shortcut to launch selected copy
+  * Make Shortcut - for starting selected copy
+  * Make Master Shortcut - for starting next unlaunched copy
 
 ==Expert Controls==
 
-  * Set Registry Path - path should be set before manually starting a specific install
-  * Clear Mutex - closes the mutex handle under all live gw.exe processes
-  * Open Texmod - attempts to locate Texmod and open
-  * Force gw.dat unlock - read warning message... useful if you are out of diskspace and need to desperately mule without extra copies
+  * Set Registry Path - set gw path to selected copy in registry
+  * Clear Mutex - closes the mutex handle under all active gw.exe processes
+  * Start Texmod - locate and start Texmod
+  * Force gw.dat unlock - useful if you are out of diskspace and need a quick muling session
 
-===Launch Sequence===
+==Launch Sequence==
 
-  # Set new gw path in registry
+  # Set Registry Path
   # Mutex cleared from all gw.exe processes
   # Launch gw copy
 
-==Vista/Win7 Quirk==
-
-Short version: Run the launcher as administrator.
-
-Long version: Any Guild Wars copies installed to:
-C:\Program Files or C:\Program Files (x86) <--folder only exists in 64-bit window installs 
-
-seem to require special permissions when started. (at least on Vista-64, may be true for Vista and Win7 32bit as well)
-
-Specifically gw.exe needs to be ran as administrator to access gw.dat. When gw.exe is ran as administrator, in Vista and Win7, Guild Wars Multi-launcher ALSO needs to be ran as administrator for it to be able to close handles in the gw copy that ran as admin.
-
-Vista and Win7 are tricky in that, once you approve a program to run as admin, it doesn't really ask you again for a while. Even if you move it, it still seems to remember to run as admin. Don't know if this lasts the session or not.
-
-Solution:
-Run Guild Wars Multi-Launcher in admin mode (right click gwmultilaunch.exe-> run as admin)
-
-Running gwml in admin mode as well puts it on equal footing with gw.exe that was run as admin. This allows it to close the mutex which prevents more gw.exes from launching.
-
 ==FAQ==
+
+Q: I am using Vista/7. I am having trouble getting another copy to start. 
+
+A: Guild Wars under some circumstances may be running under admin rights under Vista/Win7. If this is the case, GWML must also be run under admin (right click gwmultilaunch.exe-> run as admin). Running GWML in admin mode allows it to close the mutex of gw.exe which were ran as admin.
 
 Q: How do I use Texmod with this?
 
@@ -109,7 +85,7 @@ Q: How do I report a bug?
 
 A: Please report all bugs at http://code.google.com/p/gwmultilaunch/issues/list.
 
-==URL==
+==Website==
 
 http://code.google.com/p/gwmultilaunch/
 
@@ -124,8 +100,15 @@ http://code.google.com/p/gwmultilaunch/
   * Alexander Burn Victim - thank you for testing in vista 64-bit
   * Aciid Bu5t0r - thank you for bringing up the idea of forcefully unlocking gw.dat
   * MithranArkanere - thank you for detailing the registry issue
+  * gergely.nagy - thank you for the idea and sample code to enable a cycling master shortcut
 
 ==History==
+
+v0.6b (2009/08/21)
+  * Interface refresh
+  * New feature
+    * master shortcut: single shortcut can be used to launch additional copies
+    
 v0.5 (2009/06/12)
   * Milestone final release. (v1.0 release supporting launching without making copies on wishlist)
   * Fixed registry writing code to write to both CURRENT_USER and LOCAL_MACHINE if paths exist
@@ -165,4 +148,4 @@ v0.1a (2009/05/09)
 
 ==License==
 
-This software is open source licensed under GPL v3. Anyone is free to view the source. The source is available at the project url. It is a C# solution for Visual Studio 2005.
+This software is open source licensed under GPL v3.

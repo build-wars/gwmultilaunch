@@ -23,7 +23,7 @@ using System.Diagnostics;
 
 namespace GWMultiLaunch
 {
-    public class HandleManager
+    public static class HandleManager
     {
         #region Native Method Signatures
 
