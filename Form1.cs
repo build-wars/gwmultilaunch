@@ -277,7 +277,7 @@ namespace GWMultiLaunch
                 }
 
                 //attempt to launch
-                if (LaunchGame(path, mSettings.GetArgument(path), forced))
+                if (LaunchGame(path, mSettings.GetArguments(path), forced))
                 {
                     //give time for gw to read value before it gets changed again.
                     System.Threading.Thread.Sleep(mSettings.RegistryCooldown);
@@ -653,7 +653,7 @@ namespace GWMultiLaunch
                 //one item selected
                 mSelectedPath = profilesListBox.SelectedItem.ToString();
                 argumentsTextBox.Enabled = true;
-                argumentsTextBox.Text = mSettings.GetArgument(mSelectedPath);
+                argumentsTextBox.Text = mSettings.GetArguments(mSelectedPath);
 
                 regButton.Enabled = true;
                 removeCopyButton.Enabled = true;
@@ -722,7 +722,7 @@ namespace GWMultiLaunch
             
             foreach (string gwPath in profilesListBox.SelectedItems)
             {
-                gwArgs = mSettings.GetArgument(gwPath);
+                gwArgs = mSettings.GetArguments(gwPath);
 
                 if (ShortcutCreator.CreateSingleLaunchShortcut(gwPath, gwArgs))
                 {
