@@ -25,30 +25,29 @@ namespace GWMultiLaunch
 {
     static class Program
     {
+        public static SettingsManager settings = new SettingsManager();
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
         static void Main(string[] args)
         {
-            SettingsManager settings = new SettingsManager();
-
             if (args.Length >= 1)
             {
-                HandleArguments(settings, args);
+                HandleArguments(args);
             }
             else
             {
-                LaunchGUI(settings);
+                LaunchGUI();
             }
         }
 
         /// <summary>
         /// Altered functionality depending on arguments.
         /// </summary>
-        /// <param name="settings">An initialized SettingsManager.</param>
         /// <param name="programArgs">GWMultiLaunch arguments.</param>
-        static void HandleArguments(SettingsManager settings, string[] programArgs)
+        static void HandleArguments(string[] programArgs)
         {
             string firstArgument = programArgs[0];
 
@@ -57,7 +56,7 @@ namespace GWMultiLaunch
             if (autoLaunch)
             {
                 //launch by trying gw paths in the ini file
-                LaunchByList(settings);
+                LaunchByList();
             }
             else
             {
@@ -69,16 +68,15 @@ namespace GWMultiLaunch
         /// <summary>
         /// Launch the GUI
         /// </summary>
-        /// <param name="settings">An initialized SettingsManager.</param>
-        static void LaunchGUI(SettingsManager settings)
+        static void LaunchGUI()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1(settings));
+            Application.Run(new Form1());
         }
 
         /// <summary>
-        /// Retrieves Guild Wars launch arguments. Locates it as the second argument passed to GWMultiLaunch.
+        /// Retrieves Guild Wars launch arguments.
         /// </summary>
         /// <param name="programArgs">GWMultiLaunch arguments.</param>
         /// <returns>GW launch arguments. Empty string if none found.</returns>
@@ -120,12 +118,11 @@ namespace GWMultiLaunch
         /// <summary>
         /// Iterates through the Guild Wars copies list and attempts to launch new copy.
         /// </summary>
-        /// <param name="settings">An initialized SettingsManager.</param>
-        static void LaunchByList(SettingsManager settings)
+        static void LaunchByList()
         {
             bool launchAttempted = false;
 
-            foreach (KeyValuePair<string, string> i in settings.Profiles)
+            foreach (KeyValuePair<string, string> i in Program.settings.Profiles)
             {
                 String currentPath = i.Key;
 

@@ -104,7 +104,7 @@ http://code.google.com/p/gwmultilaunch/
 
 ==History==
 
-v0.6b (2009/08/21)
+v0.6b (2009/08/22)
   * Interface refresh
   * New feature
     * master shortcut: single shortcut can be used to launch additional copies
