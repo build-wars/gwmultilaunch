@@ -56,11 +56,11 @@ namespace GWMultiLaunch
 
         #region Functions
 
-        public Form1(SettingsManager fileCloset)
+        public Form1()
         {
             InitializeComponent();
 
-            mSettings = fileCloset;
+            mSettings = Program.settings;
             mSelectedPath = string.Empty;
 
             InitializeInstallList();
