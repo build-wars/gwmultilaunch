@@ -69,6 +69,10 @@ namespace GWMultiLaunch
         private const char NUM_SPLIT_CHAR = ',';
         private const char PATH_ARG_SPLIT_CHAR = '|';
 
+        #endregion
+
+        #region Member Variables
+
         private LaunchProfiles mProfiles;
         private string mINIFilePath;
         private string mTexmodPath;
@@ -138,9 +142,10 @@ namespace GWMultiLaunch
             mProfiles.Profiles.Remove(pathToRemove);
         }
 
-        public string GetArgument(string path)
+        public string GetArguments(string path)
         {
             string argument;
+
             mProfiles.Profiles.TryGetValue(path, out argument);
 
             return argument;
@@ -148,184 +153,161 @@ namespace GWMultiLaunch
 
         private void Load()
         {
-            //Load TexmodPath from ini
+            //Load Texmod path
             mTexmodPath = GetIniValue(OPTIONS_SECTION, TEXMOD_PATH_KEY, mINIFilePath);
 
-            //Get cooldown value
-            mRegistryCooldown = GetRegDelay();
+            //Load registry delay value
+            LoadRegDelay();
 
-            //Get ForceDatUnlock value
-            mForceUnlock = GetForceDatUnlock();
+            //Load ForceDatUnlock value
+            LoadForceUnlockValue();
 
-            //Load launch profiles from ini
-            mProfiles = LoadProfiles();
+            //Load launch profiles
+            LoadProfiles();
         }
 
-        private void Save()
+        private void LoadRegDelay()
         {
-            //Write TexmodPath to ini
-            WriteINIValue(OPTIONS_SECTION, TEXMOD_PATH_KEY, mTexmodPath, mINIFilePath);
+            string sRegistryCoolDown = GetIniValue(OPTIONS_SECTION, REG_DELAY_NAME, mINIFilePath);
 
-            //Write cooldown value
-            WriteINIValue(OPTIONS_SECTION, REG_DELAY_NAME, mRegistryCooldown.ToString(), mINIFilePath);
-
-            //Write ForceDatUnlock value
-            if (mForceUnlock)
+            if (Int32.TryParse(sRegistryCoolDown, out mRegistryCooldown) == false)
             {
-                WriteINIValue(OPTIONS_SECTION, DAT_UNLOCK_KEY, "true", mINIFilePath);
+                mRegistryCooldown = DEFAULT_REG_DELAY;
             }
-            else
-            {
-                WriteINIValue(OPTIONS_SECTION, DAT_UNLOCK_KEY, "false", mINIFilePath);
-            }
-
-            //Write launch profiles to ini
-            WriteProfiles();
         }
 
-        private bool GetForceDatUnlock()
+        private void LoadForceUnlockValue()
         {
-            bool bForceUnlock = false;
-
-            string rawValue = GetIniValue(OPTIONS_SECTION, DAT_UNLOCK_KEY, mINIFilePath);
-            if (rawValue != string.Empty)
-            {
-                if(rawValue.Equals("true", StringComparison.OrdinalIgnoreCase))
-                {
-                    bForceUnlock = true;
-                }
-            }
-
-            return bForceUnlock;
+            string sForceUnlock = GetIniValue(OPTIONS_SECTION, DAT_UNLOCK_KEY, mINIFilePath);
+            Boolean.TryParse(sForceUnlock, out mForceUnlock);
         }
 
-        private int GetRegDelay()
+        private void LoadProfiles()
         {
-            int registryCooldown = DEFAULT_REG_DELAY;
-            
-            string rawValue = GetIniValue(OPTIONS_SECTION, REG_DELAY_NAME, mINIFilePath);
-            if (rawValue != string.Empty)
-            {
-                try
-                {
-                    registryCooldown = int.Parse(rawValue);
-                }
-                catch (Exception)
-                {
-                    registryCooldown = DEFAULT_REG_DELAY;
-                }
-            }
+            LoadSelectedIndexes();
+            LoadProfileList();
+        }
 
-            return registryCooldown;
-        }   
-
-        private LaunchProfiles LoadProfiles()
+        private void LoadSelectedIndexes()
         {
-            LaunchProfiles profiles = new LaunchProfiles();
-
-            // Get selected indexes
             string selectionString = GetIniValue(PROFILES_SECTION, SELECTED_KEY_NAME, mINIFilePath);
             string[] selectionStringArray = selectionString.Split(NUM_SPLIT_CHAR);
 
-            profiles.SelectedIndices = new int[selectionStringArray.Length];
+            mProfiles.SelectedIndices = new int[selectionStringArray.Length];
 
             for (int i = 0; i < selectionStringArray.Length; i++)
             {
                 try
                 {
-                    profiles.SelectedIndices[i] = int.Parse(selectionStringArray[i]);
+                    mProfiles.SelectedIndices[i] = int.Parse(selectionStringArray[i]);
                 }
                 catch (Exception)
                 {
-                    profiles.SelectedIndices = new int[0];
+                    mProfiles.SelectedIndices = new int[0];
                     break;
                 }
             }
-
-            // Get launch profiles
-            profiles.Profiles = new Dictionary<string, string>();
-
-            int j = 0;
-            string key;
-            string value;
-            bool valueRead = true;
-
-            do
-            {
-                key = PROFILE_KEY_NAME + j.ToString();
-                value = GetIniValue(PROFILES_SECTION, key, mINIFilePath);
-
-                if (value == string.Empty)
-                {
-                    valueRead = false;      //nothing found, lets stop reading
-
-                    if (j == 0)
-                    {
-                        //try to at least add the path gw is installed to
-                        string gwPath = Form1.GetCurrentGuildWarsPath();
-                        string gwArg = Form1.DEFAULT_ARGUMENT;
-
-                        if (gwPath != string.Empty)
-                        {
-                            profiles.Profiles.Add(gwPath, gwArg);
-                        }
-                    }
-                }
-                else
-                {
-                    string[] values = value.Split(PATH_ARG_SPLIT_CHAR);
-
-                    if (values.Length < 2)
-                    {
-                        System.Windows.Forms.MessageBox.Show("Ini file error. The value for the copy \"" + value + "\" is malformed.");
-                    }
-                    else
-                    {
-                        profiles.Profiles.Add(values[0], values[1]);
-                    }
-
-                    j++;
-                }
-            } while (valueRead);
-
-
-            return profiles;
         }
 
-        private void WriteProfiles()
+        private void LoadProfileList()
         {
-            //Lets clear the section first
-            ClearINISection(PROFILES_SECTION, mINIFilePath);
+            mProfiles.Profiles = new Dictionary<string, string>();
 
-            string selectionString = string.Empty;
-            foreach (int i in SelectedIndices)
+            LoadProfileListFromINI();
+
+            if (mProfiles.Profiles.Count == 0)
             {
-                if (selectionString != string.Empty)
+                //add default install
+                LoadInitialCopy();
+            }
+        }
+        
+        private void LoadProfileListFromINI()
+        {
+            string key;
+            string profileString;
+
+            for (int i = 0; ; i++)
+            {
+                key = PROFILE_KEY_NAME + i.ToString();
+                profileString = GetIniValue(PROFILES_SECTION, key, mINIFilePath);
+
+                string[] values = profileString.Split(PATH_ARG_SPLIT_CHAR);
+
+                if (values.Length >= 2)
                 {
-                    selectionString = selectionString + NUM_SPLIT_CHAR.ToString() + i.ToString();
+                    mProfiles.Profiles.Add(values[0], values[1]);
                 }
                 else
                 {
-                    //first number, do not add comma before it
-                    selectionString = i.ToString();
+                    break;
                 }
             }
-            
+        }
 
-            //Write the data
-            WriteINIValue(PROFILES_SECTION, SELECTED_KEY_NAME, selectionString, mINIFilePath);
+        private void LoadInitialCopy()
+        {
+            string gwPath = Form1.GetCurrentGuildWarsPath();
+            string gwArg = Form1.DEFAULT_ARGUMENT;
 
+            if (gwPath != string.Empty)
+            {
+                mProfiles.Profiles.Add(gwPath, gwArg);
+            }
+        }
+
+        private void Save()
+        {
+            //Write Texmod path
+            WriteINIValue(OPTIONS_SECTION, TEXMOD_PATH_KEY, mTexmodPath, mINIFilePath);
+
+            //Write cooldown value
+            WriteINIValue(OPTIONS_SECTION, REG_DELAY_NAME, mRegistryCooldown.ToString(), mINIFilePath);
+
+            //Write force unlock option
+            WriteINIValue(OPTIONS_SECTION, DAT_UNLOCK_KEY, mForceUnlock.ToString(), mINIFilePath);
+
+            //Save launch profiles
+            SaveProfiles();
+        }
+
+        private void SaveProfiles()
+        {
+            ClearINISection(PROFILES_SECTION, mINIFilePath);
+            SaveSelectedIndexes();
+            SaveProfileList();
+        }
+
+        private void SaveSelectedIndexes()
+        {
+            StringBuilder selectionString = new StringBuilder();
+
+            foreach (int i in SelectedIndices)
+            {
+                if (selectionString.Length > 0)
+                {
+                    selectionString.Append(NUM_SPLIT_CHAR);
+                }
+
+                selectionString.Append(i);
+            }
+
+            WriteINIValue(PROFILES_SECTION, SELECTED_KEY_NAME, selectionString.ToString(), mINIFilePath);
+        }
+
+        private void SaveProfileList()
+        {
             int j = 0;
             string key;
             string value;
-            
+
             foreach (KeyValuePair<string, string> kvp in mProfiles.Profiles)
             {
                 key = PROFILE_KEY_NAME + j.ToString();
                 value = kvp.Key + PATH_ARG_SPLIT_CHAR + kvp.Value;
 
                 WriteINIValue(PROFILES_SECTION, key, value, mINIFilePath);
-                
+
                 j++;
             }
         }
