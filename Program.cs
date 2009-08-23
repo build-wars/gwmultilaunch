@@ -25,7 +25,7 @@ namespace GWMultiLaunch
 {
     static class Program
     {
-        public const string MUTEX_MATCH_STRING      = "AN-Mutex-Window";
+        public const string MUTEX_MATCH_STRING      = "AN-Mute";
         public const string DEFAULT_ARGUMENT        = "-windowed";
         public const string ERROR_CAPTION           = "GWMultiLaunch Error";
 
