@@ -25,6 +25,21 @@ namespace GWMultiLaunch
 {
     static class Program
     {
+        public const string MUTEX_MATCH_STRING      = "AN-Mutex-Window";
+        public const string DEFAULT_ARGUMENT        = "-windowed";
+        public const string ERROR_CAPTION           = "GWMultiLaunch Error";
+
+        public const string SHORTCUT_PREFIX         = "Guild Wars ML-";
+        public const string AUTO_LAUNCH_SHORTCUT    = "Guild Wars ML-X";
+        public const string AUTO_LAUNCH_SWITCH      = "-auto";
+        
+        public const string GW_PROCESS_NAME         = "Gw";
+        public const string GW_FILENAME             = "Gw.exe";
+        public const string GW_DAT                  = "Gw.dat";
+        public const string GW_REG_LOCATION         = "SOFTWARE\\ArenaNet\\Guild Wars";
+        public const string GW_TEMPLATES            = "\\Templates";
+        public const string TM_FILENAME             = "texmod.exe";
+        
         public static SettingsManager settings = new SettingsManager();
 
         /// <summary>
@@ -39,7 +54,7 @@ namespace GWMultiLaunch
             }
             else
             {
-                LaunchGUI();
+                ShowGUI();
             }
         }
 
@@ -51,12 +66,12 @@ namespace GWMultiLaunch
         {
             string firstArgument = programArgs[0];
 
-            bool autoLaunch = firstArgument.Equals(Form1.AUTO_LAUNCH_SWITCH, StringComparison.OrdinalIgnoreCase);
+            bool autoLaunch = firstArgument.Equals(AUTO_LAUNCH_SWITCH, StringComparison.OrdinalIgnoreCase);
 
             if (autoLaunch)
             {
                 //launch by trying gw paths in the ini file
-                LaunchByList();
+                LaunchAvailableCopy();
             }
             else
             {
@@ -66,13 +81,13 @@ namespace GWMultiLaunch
         }
 
         /// <summary>
-        /// Launch the GUI
+        /// Show the GUI
         /// </summary>
-        static void LaunchGUI()
+        static void ShowGUI()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Application.Run(new MainForm());
         }
 
         /// <summary>
@@ -103,22 +118,19 @@ namespace GWMultiLaunch
             if (File.Exists(pathToLaunch) == false)
             {
                 MessageBox.Show("The path: " + pathToLaunch + " does not exist!",
-                    Form1.ERROR_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    ERROR_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {
-                //set path in registry
-                Form1.SetRegistry(pathToLaunch);
-
                 //attempt to launch
-                Form1.LaunchGame(pathToLaunch, launchArgs, false);
+                MainForm.LaunchGame(pathToLaunch, launchArgs, false);
             }
         }
 
         /// <summary>
         /// Iterates through the Guild Wars copies list and attempts to launch new copy.
         /// </summary>
-        static void LaunchByList()
+        static void LaunchAvailableCopy()
         {
             bool launchAttempted = false;
 
@@ -126,7 +138,7 @@ namespace GWMultiLaunch
             {
                 String currentPath = i.Key;
 
-                if (Form1.IsCopyRunning(currentPath) == false)
+                if (MainForm.IsCopyRunning(currentPath) == false)
                 {
                     LaunchByArguments(currentPath, i.Value);
                     launchAttempted = true;

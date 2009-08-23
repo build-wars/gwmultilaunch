@@ -33,7 +33,7 @@ namespace GWMultiLaunch
         public static bool CreateSingleLaunchShortcut(string gwPath, string gwArgs)
         {
             string desktopFolder = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-            string pathLink = GetUnusedFilePath(desktopFolder, Form1.SHORTCUT_PREFIX);
+            string pathLink = GetUnusedFilePath(desktopFolder, Program.SHORTCUT_PREFIX);
             string targetPath = System.Windows.Forms.Application.ExecutablePath;
             string arguments = "\"" + gwPath + "\"" + " " + "\"" + gwArgs + "\"";
             string iconLocation = gwPath + ", 0";
@@ -48,9 +48,9 @@ namespace GWMultiLaunch
         public static bool CreateMasterShortcut()
         {
             string desktopFolder = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-            string pathLink = desktopFolder + "\\" + Form1.AUTO_LAUNCH_SHORTCUT + ".lnk";
+            string pathLink = desktopFolder + "\\" + Program.AUTO_LAUNCH_SHORTCUT + ".lnk";
             string targetPath = System.Windows.Forms.Application.ExecutablePath;
-            string arguments = Form1.AUTO_LAUNCH_SWITCH;
+            string arguments = Program.AUTO_LAUNCH_SWITCH;
             string iconLocation = targetPath + ", 0";
 
             return CreateShortcut(pathLink, targetPath, arguments, iconLocation);
