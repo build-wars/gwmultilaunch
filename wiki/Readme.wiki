@@ -36,7 +36,7 @@ Launch multiple copies of Guild Wars.
 
   * Set Registry Path - set gw path to selected copy in registry
   * Clear Mutex - closes the mutex handle under all active gw.exe processes
-  * Start Texmod - locate and start Texmod
+  * Start Texmod - sets path, clears mutex, locates and start Texmod
   * Force gw.dat unlock - useful if you are out of diskspace and need a quick muling session
 
 ==Launch Sequence==
@@ -54,9 +54,9 @@ A: Guild Wars under some circumstances may be running under admin rights under V
 Q: How do I use Texmod with this?
 
 A: To launch a Texmoded copy:
-   # Select the copy you will be launching and click "Set Registry Path"
-   # Click "Clear Mutex"
-   # Open Texmod and launch the copy
+   # Select the copy you will be launching
+   # Click "Start Mutex"
+   # Select the same copy within TexMod and run
 
 Q: Do I have to always use the launcher or the special shortcuts?
 
@@ -105,10 +105,12 @@ http://code.google.com/p/gwmultilaunch/
 
 ==History==
 
-v0.6b (2009/08/21)
+v0.6b (2009/08/23)
   * Interface refresh
+  * Changed functionality
+    * Clicking "Start TexMod" will also set the path and clear mutex, saves two clicks
   * New feature
-    * master shortcut: single shortcut can be used to launch additional copies
+    * master shortcut: shortcut to launch additional copies, automatically picks unlaunched copy
     
 v0.5 (2009/06/12)
   * Milestone final release. (v1.0 release supporting launching without making copies on wishlist)
