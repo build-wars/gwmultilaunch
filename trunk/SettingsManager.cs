@@ -75,7 +75,7 @@ namespace GWMultiLaunch
 
         private LaunchProfiles mProfiles;
         private string mINIFilePath;
-        private string mTexmodPath;
+        private string mTexModPath;
         private int mRegistryCooldown;
         private bool mForceUnlock;
 
@@ -105,10 +105,10 @@ namespace GWMultiLaunch
             set { mProfiles.SelectedIndices = value; }
         }
 
-        public string TexmodPath
+        public string TexModPath
         {
-            get { return mTexmodPath; }
-            set { mTexmodPath = value; }
+            get { return mTexModPath; }
+            set { mTexModPath = value; }
         }
 
         #endregion
@@ -129,11 +129,15 @@ namespace GWMultiLaunch
 
         public void AddProfile(string pathToAdd, string argument)
         {
-            UpdateProfile(pathToAdd, argument);
+            mProfiles.Profiles[pathToAdd] = argument;
         }
 
         public void UpdateProfile(string pathToUpdate, string argument)
         {
+            if (mProfiles.Profiles.ContainsKey(pathToUpdate) == false)
+            {
+                return;
+            }
             mProfiles.Profiles[pathToUpdate] = argument;
         }
 
@@ -153,8 +157,8 @@ namespace GWMultiLaunch
 
         private void Load()
         {
-            //Load Texmod path
-            mTexmodPath = GetIniValue(OPTIONS_SECTION, TEXMOD_PATH_KEY, mINIFilePath);
+            //Load TexMod path
+            mTexModPath = GetIniValue(OPTIONS_SECTION, TEXMOD_PATH_KEY, mINIFilePath);
 
             //Load registry delay value
             LoadRegDelay();
@@ -247,8 +251,8 @@ namespace GWMultiLaunch
 
         private void LoadInitialCopy()
         {
-            string gwPath = Form1.GetCurrentGuildWarsPath();
-            string gwArg = Form1.DEFAULT_ARGUMENT;
+            string gwPath = MainForm.GetGWRegPath();
+            string gwArg = Program.DEFAULT_ARGUMENT;
 
             if (gwPath != string.Empty)
             {
@@ -258,8 +262,8 @@ namespace GWMultiLaunch
 
         private void Save()
         {
-            //Write Texmod path
-            WriteINIValue(OPTIONS_SECTION, TEXMOD_PATH_KEY, mTexmodPath, mINIFilePath);
+            //Write TexMod path
+            WriteINIValue(OPTIONS_SECTION, TEXMOD_PATH_KEY, mTexModPath, mINIFilePath);
 
             //Write cooldown value
             WriteINIValue(OPTIONS_SECTION, REG_DELAY_NAME, mRegistryCooldown.ToString(), mINIFilePath);

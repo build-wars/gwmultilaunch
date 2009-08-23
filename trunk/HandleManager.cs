@@ -17,6 +17,7 @@
 //along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
@@ -160,11 +161,69 @@ namespace GWMultiLaunch
         #region Functions
 
         /// <summary>
+        /// Clears file locks on the GW_DAT file located at basePath.
+        /// </summary>
+        /// <param name="basePath">Full patch to gw.dat file</param>
+        /// <returns></returns>
+        public static bool ClearDatLock(string basePath)
+        {
+            bool success = false;
+
+            //take off the drive portion due to limitation in how killhandle works for file name
+            string root = Directory.GetDirectoryRoot(basePath).Substring(0, 2);
+            basePath = basePath.Replace(root, string.Empty);
+            string fileToUnlock = basePath + "\\" + Program.GW_DAT;
+
+            //get list of currently running system processes
+            Process[] processList = Process.GetProcesses();
+
+            foreach (Process i in processList)
+            {
+                //filter for guild wars ones
+                if (i.ProcessName.Equals(Program.GW_PROCESS_NAME, StringComparison.OrdinalIgnoreCase))
+                {
+                    if (HandleManager.KillHandle(i, fileToUnlock, true))
+                    {
+                        success = true;
+                    }
+                }
+            }
+
+            return success;
+        }
+
+        /// <summary>
+        /// Kills GW mutex is active processes.
+        /// </summary>
+        /// <returns></returns>
+        public static bool ClearMutex()
+        {
+            bool success = false;
+
+            //get list of currently running system processes
+            Process[] processList = Process.GetProcesses();
+
+            foreach (Process i in processList)
+            {
+                //filter for guild wars ones
+                if (i.ProcessName.Equals(Program.GW_PROCESS_NAME, StringComparison.OrdinalIgnoreCase))
+                {
+                    if (HandleManager.KillHandle(i, Program.MUTEX_MATCH_STRING, false))
+                    {
+                        success = true;
+                    }
+                }
+            }
+
+            return success;
+        }
+
+        /// <summary>
         /// Kills the handle whose name contains the nameFragment.
         /// </summary>
         /// <param name="targetProcess"></param>
-        /// <param name="handleNamePattern"></param>
-        public static bool KillHandle(Process targetProcess, string nameFragment, bool isFile)
+        /// <param name="handleName"></param>
+        public static bool KillHandle(Process targetProcess, string handleName, bool isFile)
         {
             bool success = false;
 
@@ -196,7 +255,7 @@ namespace GWMultiLaunch
                     name = GetHandleName(handleInfo, hProcess);
                 }
 
-                if (name.Contains(nameFragment))
+                if (name.Contains(handleName))
                 {
                     if (CloseHandleEx(handleInfo.OwnerPID, new IntPtr(handleInfo.HandleValue)))
                     {

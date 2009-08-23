@@ -28,25 +28,10 @@ using Microsoft.Win32;
 
 namespace GWMultiLaunch
 {
+    /// DEPRECATED ///
+    /// SEE MainForm.cs ///
     public partial class Form1 : Form
     {
-        #region Constants
-
-        public const string DEFAULT_ARGUMENT = "-windowed";
-        public const string SHORTCUT_PREFIX = "Guild Wars ML-";
-        public const string AUTO_LAUNCH_SWITCH = "-auto";
-        public const string AUTO_LAUNCH_SHORTCUT = "Guild Wars ML-X";
-        public const string ERROR_CAPTION = "GWMultiLaunch Error";
-
-        private const string MUTEX_MATCH_STRING = "AN-Mutex-Window";
-        private const string GW_REG_LOCATION = "SOFTWARE\\ArenaNet\\Guild Wars";
-        private const string GW_PROCESS_NAME = "Gw";
-        private const string GW_FILENAME = "Gw.exe";
-        private const string GW_DAT = "Gw.dat";
-        private const string GW_TEMPLATES = "\\Templates";
-
-        #endregion
-
         #region Member Variables
 
         private SettingsManager mSettings;
@@ -86,7 +71,7 @@ namespace GWMultiLaunch
 
         private bool AddCopy(string pathToAdd)
         {
-            return AddCopy(pathToAdd, DEFAULT_ARGUMENT);
+            return AddCopy(pathToAdd, Program.DEFAULT_ARGUMENT);
         }
 
         private bool AddCopy(string pathToAdd, string pathArg)
@@ -118,7 +103,7 @@ namespace GWMultiLaunch
             string root = Directory.GetDirectoryRoot(basePath).Substring(0, 2);
             basePath = basePath.Replace(root, string.Empty);
 
-            string fileToUnlock = basePath + "\\" + GW_DAT;
+            string fileToUnlock = basePath + "\\" + Program.GW_DAT;
 
             //get list of currently running system processes
             Process[] processList = Process.GetProcesses();
@@ -126,7 +111,7 @@ namespace GWMultiLaunch
             foreach (Process i in processList)
             {
                 //filter for guild wars ones
-                if (i.ProcessName.Equals(GW_PROCESS_NAME, StringComparison.OrdinalIgnoreCase))
+                if (i.ProcessName.Equals(Program.GW_PROCESS_NAME, StringComparison.OrdinalIgnoreCase))
                 {
                     if (HandleManager.KillHandle(i, fileToUnlock, true))
                     {
@@ -148,9 +133,9 @@ namespace GWMultiLaunch
             foreach (Process i in processList)
             {
                 //filter for guild wars ones
-                if (i.ProcessName.Equals(GW_PROCESS_NAME, StringComparison.OrdinalIgnoreCase))
+                if (i.ProcessName.Equals(Program.GW_PROCESS_NAME, StringComparison.OrdinalIgnoreCase))
                 {
-                    if (HandleManager.KillHandle(i, MUTEX_MATCH_STRING, false))
+                    if (HandleManager.KillHandle(i, Program.MUTEX_MATCH_STRING, false))
                     {
                         success = true;
                     }
@@ -171,11 +156,11 @@ namespace GWMultiLaunch
             {
                 RegistryKey activeKey;
 
-                activeKey = currentUserKey.OpenSubKey(GW_REG_LOCATION, false);
+                activeKey = currentUserKey.OpenSubKey(Program.GW_REG_LOCATION, false);
 
                 if (activeKey == null)
                 {
-                    activeKey = localMachineKey.OpenSubKey(GW_REG_LOCATION, false);
+                    activeKey = localMachineKey.OpenSubKey(Program.GW_REG_LOCATION, false);
                 }
 
                 return activeKey.GetValue("Path").ToString();
@@ -234,7 +219,7 @@ namespace GWMultiLaunch
             foreach (Process i in processList)
             {
                 //does process name match?
-                if (i.ProcessName.Equals(GW_PROCESS_NAME, StringComparison.OrdinalIgnoreCase))
+                if (i.ProcessName.Equals(Program.GW_PROCESS_NAME, StringComparison.OrdinalIgnoreCase))
                 {
                     try
                     {
@@ -295,7 +280,7 @@ namespace GWMultiLaunch
                 if (IsCopyRunning(path))
                 {
                     MessageBox.Show(path + " is already running, please launch a different copy.",
-                        ERROR_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        Program.ERROR_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return success;
                 }
             }
@@ -319,7 +304,7 @@ namespace GWMultiLaunch
             catch (Exception e)
             {
                 MessageBox.Show("Error launching: " + path + "!\n" + e.Message,
-                    ERROR_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Program.ERROR_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             return success;
@@ -363,7 +348,7 @@ namespace GWMultiLaunch
                     sourceFileList.AddRange(Directory.GetFiles(sourceFolder, "*.*", SearchOption.TopDirectoryOnly));
 
                     //include files in templates folder if available (Vista/7 have it in user documents, no need to copy)
-                    string templateDir = sourceFolder + GW_TEMPLATES;
+                    string templateDir = sourceFolder + Program.GW_TEMPLATES;
                     if (Directory.Exists(templateDir))
                     {
                         sourceFileList.AddRange(Directory.GetFiles(templateDir, "*.*", SearchOption.AllDirectories));
@@ -377,7 +362,7 @@ namespace GWMultiLaunch
                 }
                 else
                 {
-                    MessageBox.Show("Error, cannot copy to the same directory.", ERROR_CAPTION, 
+                    MessageBox.Show("Error, cannot copy to the same directory.", Program.ERROR_CAPTION, 
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                     success = false;
                 }
@@ -385,7 +370,7 @@ namespace GWMultiLaunch
             catch (Exception e)
             {
                 MessageBox.Show("Error occurred while copying Guild Wars from "
-                    + sourceFolder + " to " + destFolder + "!\n" + e.Message, ERROR_CAPTION,
+                    + sourceFolder + " to " + destFolder + "!\n" + e.Message, Program.ERROR_CAPTION,
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 success = false;
             }
@@ -404,7 +389,7 @@ namespace GWMultiLaunch
             {
                 RegistryKey activeKey;
 
-                activeKey = currentUserKey.OpenSubKey(GW_REG_LOCATION, true);
+                activeKey = currentUserKey.OpenSubKey(Program.GW_REG_LOCATION, true);
                 if (activeKey != null)
                 {
                     activeKey.SetValue("Path", gwPath);
@@ -412,7 +397,7 @@ namespace GWMultiLaunch
                     activeKey.Close();
                 }
 
-                activeKey = localMachineKey.OpenSubKey(GW_REG_LOCATION, true);
+                activeKey = localMachineKey.OpenSubKey(Program.GW_REG_LOCATION, true);
                 if (activeKey != null)
                 {
                     activeKey.SetValue("Path", gwPath);
@@ -452,9 +437,7 @@ namespace GWMultiLaunch
 
             if (dlg.ShowDialog() == DialogResult.OK)
             {
-                string pathToAdd = dlg.FileName;
-
-                AddCopy(pathToAdd);
+                AddCopy(dlg.FileName);
             }
         }
 
@@ -524,8 +507,8 @@ namespace GWMultiLaunch
             }
             else if (!File.Exists(selectedInstall))
             {
-                MessageBox.Show("Can not make a copy. The select install: " + selectedInstall + " does not exist!", 
-                    ERROR_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Can not make a copy. The select install: " + selectedInstall + " does not exist!",
+                    Program.ERROR_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {
@@ -549,7 +532,7 @@ namespace GWMultiLaunch
                         if (copySuccess)
                         {
                             // lets add the new copy to the profile list
-                            string gwPath = selectFolderDlg.SelectedPath + "\\" + GW_FILENAME;
+                            string gwPath = selectFolderDlg.SelectedPath + "\\" + Program.GW_FILENAME;
                             if (File.Exists(gwPath))
                             {
                                 AddCopy(gwPath);
@@ -617,7 +600,7 @@ namespace GWMultiLaunch
                 }
                 catch (Exception t)
                 {
-                    MessageBox.Show(t.Message, ERROR_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(t.Message, Program.ERROR_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -748,7 +731,7 @@ namespace GWMultiLaunch
             string texmodPath = string.Empty;
 
             //check for path from ini
-            string iniTextmodPath = mSettings.TexmodPath;
+            string iniTextmodPath = mSettings.TexModPath;
 
             if (File.Exists(iniTextmodPath))
             {
@@ -804,13 +787,13 @@ namespace GWMultiLaunch
                     //write path to ini
                     if (iniTextmodPath != texmodPath)
                     {
-                        mSettings.TexmodPath = texmodPath;
+                        mSettings.TexModPath = texmodPath;
                     }
                 }
                 else
                 {
                     //remove path from ini
-                    mSettings.TexmodPath = string.Empty;
+                    mSettings.TexModPath = string.Empty;
                 }
             }
         }
