@@ -111,7 +111,7 @@ v0.6b (2009/08/23)
     * Clicking "Start TexMod" will also set the path and clear mutex, saves two clicks
   * New feature
     * master shortcut: shortcut to launch additional copies, automatically picks unlaunched copy
-    * compatible with gw2x modified exes
+    * compatible with gwx2 modified exes
     
 v0.5 (2009/06/12)
   * Milestone final release. (v1.0 release supporting launching without making copies on wishlist)
