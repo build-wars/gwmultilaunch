@@ -104,6 +104,12 @@ http://code.google.com/p/gwmultilaunch/
 
 ==History==
 
+v0.6RC (2009/09/22)
+  * Fixed edited arguments not being used if "Launch" button is clicked while cursor
+    still in arguments textbox
+  * Moved "Launch" button to left side and increased size
+  * Added warning message to confirm copy removal
+  
 v0.6b (2009/08/23)
   * Interface refresh
   * Changed functionality

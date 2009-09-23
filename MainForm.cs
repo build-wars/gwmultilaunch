@@ -96,6 +96,7 @@ namespace GWMultiLaunch
 
         private void launchButton_Click(object sender, EventArgs e)
         {
+            UpdateSelectedPath();
             LaunchCopies();
         }
 
@@ -252,6 +253,11 @@ namespace GWMultiLaunch
 
         private void RemoveCopies()
         {
+            if (ConfirmRemoval() == false)
+            {
+                return;
+            }
+
             string[] selectedInstalls = GetSelectedInstalls();
 
             foreach (string selectedInstall in selectedInstalls)
@@ -263,6 +269,20 @@ namespace GWMultiLaunch
                 mSelectedPath = string.Empty;
                 profilesListBox.Items.Remove(selectedInstall);
             }
+        }
+
+        private bool ConfirmRemoval()
+        {
+            DialogResult removeCopies =
+                MessageBox.Show("Are you sure you want to remove selected copies?", "Remove Copies?",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+            if (removeCopies == DialogResult.Yes)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         private void MakeCopy()

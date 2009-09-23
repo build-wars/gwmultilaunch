@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("GWMultiLaunch")]
-[assembly: AssemblyDescription("v0.6 beta")]
+[assembly: AssemblyDescription("v0.6 RC")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("GWMultiLaunch")]
