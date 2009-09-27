@@ -37,6 +37,7 @@ namespace GWMultiLaunch
         public const string GW_FILENAME             = "Gw.exe";
         public const string GW_DAT                  = "Gw.dat";
         public const string GW_REG_LOCATION         = "SOFTWARE\\ArenaNet\\Guild Wars";
+        public const string GW_REG_LOCATION_AUX     = "SOFTWARE\\Wow6432Node\\ArenaNet\\Guild Wars";
         public const string GW_TEMPLATES            = "\\Templates";
         public const string TM_FILENAME             = "texmod.exe";
         

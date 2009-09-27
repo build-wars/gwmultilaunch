@@ -251,7 +251,7 @@ namespace GWMultiLaunch
 
         private void LoadInitialCopy()
         {
-            string gwPath = MainForm.GetGWRegPath();
+            string gwPath = RegistryManager.GetGWRegPath();
             string gwArg = Program.DEFAULT_ARGUMENT;
 
             if (gwPath != string.Empty)

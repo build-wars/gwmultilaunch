@@ -4,7 +4,6 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
-using Microsoft.Win32;
 
 namespace GWMultiLaunch
 {
@@ -187,7 +186,7 @@ namespace GWMultiLaunch
         private static string FindTexMod()
         {
             //use Guild Wars folder as starting point to start search
-            string gwPath = GetGWRegPath();
+            string gwPath = RegistryManager.GetGWRegPath();
             string texModPath = string.Empty;
 
             if (File.Exists(gwPath))
@@ -254,7 +253,7 @@ namespace GWMultiLaunch
             try
             {
                 //set new gw path
-                SetGWRegPath(gwPath);
+                RegistryManager.SetGWRegPath(gwPath);
 
                 //clear mutex to allow for another gw launch
                 HandleManager.ClearMutex();
@@ -321,68 +320,6 @@ namespace GWMultiLaunch
             }
 
             return success;
-        }
-
-        public static string GetGWRegPath()
-        {
-            //the path could be stored in one of two locations
-            //so we should try both.
-            RegistryKey currentUserKey = Registry.CurrentUser;      //for user installs
-            RegistryKey localMachineKey = Registry.LocalMachine;    //for machine installs
-
-            try
-            {
-                RegistryKey activeKey;
-
-                activeKey = currentUserKey.OpenSubKey(Program.GW_REG_LOCATION, false);
-
-                if (activeKey == null)
-                {
-                    activeKey = localMachineKey.OpenSubKey(Program.GW_REG_LOCATION, false);
-                }
-
-                return activeKey.GetValue("Path").ToString();
-            }
-            catch (Exception)
-            {
-                return String.Empty;
-            }
-        }
-
-        public static bool SetGWRegPath(string gwPath)
-        {
-            //the path could be stored in one of two locations
-            //so we should try both.
-            RegistryKey currentUserKey = Registry.CurrentUser;      //for user installs
-            RegistryKey localMachineKey = Registry.LocalMachine;    //for machine installs
-
-            try
-            {
-                RegistryKey activeKey;
-
-                activeKey = currentUserKey.OpenSubKey(Program.GW_REG_LOCATION, true);
-                if (activeKey != null)
-                {
-                    activeKey.SetValue("Path", gwPath);
-                    activeKey.SetValue("Src", gwPath);
-                    activeKey.Close();
-                }
-
-                activeKey = localMachineKey.OpenSubKey(Program.GW_REG_LOCATION, true);
-                if (activeKey != null)
-                {
-                    activeKey.SetValue("Path", gwPath);
-                    activeKey.SetValue("Src", gwPath);
-                    activeKey.Close();
-                }
-
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-
-            return true;
         }
 
         #endregion
