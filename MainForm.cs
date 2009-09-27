@@ -112,7 +112,7 @@ namespace GWMultiLaunch
 
         private void setPathButton_Click(object sender, EventArgs e)
         {
-            SetGWRegPath(GetSelectedInstall());
+            RegistryManager.SetGWRegPath(GetSelectedInstall());
         }
 
         private void killMutexButton_Click(object sender, EventArgs e)
@@ -122,7 +122,7 @@ namespace GWMultiLaunch
 
         private void startTexModButton_Click(object sender, EventArgs e)
         {
-            SetGWRegPath(GetSelectedInstall());
+            RegistryManager.SetGWRegPath(GetSelectedInstall());
             HandleManager.ClearMutex();
             StartTexMod();
         }

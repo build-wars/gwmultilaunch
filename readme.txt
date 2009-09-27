@@ -104,7 +104,11 @@ http://code.google.com/p/gwmultilaunch/
 
 ==History==
 
-v0.6RC (2009/09/22)
+v0.6RC (2009/09/26)
+  * Fixed registry path setting for certain setups of Guild Wars on 64-bit oses (requires admin)
+    * It is strongly recommended not to install GW to "Programs Files (x86)" folder on 64-bit
+    operating systems since this causes GW to set keys in the Wow6432Node node which requires
+    admin access to write to.
   * Fixed edited arguments not being used if "Launch" button is clicked while cursor
     still in arguments textbox
   * Moved "Launch" button to left side and increased size
