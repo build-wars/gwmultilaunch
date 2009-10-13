@@ -18,7 +18,8 @@ Launch multiple copies of Guild Wars.
   # Launch or make special shortcut for launching
   
   * Notes
-    * Vista/Win7: May need to start GWML as admin
+    * Vista/Win7: May need to start GWML as admin if GW is installed to "Program Files" folder
+    * Vent/Teamspeak: May need to run Vent/TS as admin or GWML/GW NOT as admin for key catching to work
     * GW Updates: Start a copy and wait for update to finish before launching another copy.
     * Texmod: See the FAQ section.
 
