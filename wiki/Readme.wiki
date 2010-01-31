@@ -56,7 +56,7 @@ Q: How do I use Texmod with this?
 
 A: To launch a Texmoded copy:
    # Select the copy you will be launching
-   # Click "Start Mutex"
+   # Click "Start TexMod"
    # Select the same copy within TexMod and run
 
 Q: Do I have to always use the launcher or the special shortcuts?
