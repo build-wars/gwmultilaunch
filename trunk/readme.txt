@@ -36,7 +36,7 @@ Launch multiple copies of Guild Wars.
 
   * Set Registry Path - set gw path to selected copy in registry
   * Clear Mutex - closes the mutex handle under all active gw.exe processes
-  * Start Texmod - sets path, clears mutex, locates and start Texmod
+  * Start TexMod - sets path, clears mutex, locates and start Texmod
   * Force gw.dat unlock - useful if you are out of diskspace and need a quick muling session
 
 ==Launch Sequence==
@@ -55,7 +55,7 @@ Q: How do I use Texmod with this?
 
 A: To launch a Texmoded copy:
    # Select the copy you will be launching
-   # Click "Start Mutex"
+   # Click "Start TexMod"
    # Select the same copy within TexMod and run
 
 Q: Do I have to always use the launcher or the special shortcuts?
