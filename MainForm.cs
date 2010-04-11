@@ -110,6 +110,18 @@ namespace GWMultiLaunch
             CreateMasterShortcut();
         }
 
+        private void editArgButton_Click(object sender, EventArgs e)
+        {
+            ArgumentsWizard argForm = new ArgumentsWizard();
+            argForm.Arguments = argumentsTextBox.Text;
+            argForm.StartPosition = FormStartPosition.CenterParent;
+
+            if (argForm.ShowDialog() == DialogResult.OK)
+            {
+                argumentsTextBox.Text = argForm.Arguments;
+            }
+        }
+
         private void setPathButton_Click(object sender, EventArgs e)
         {
             RegistryManager.SetGWRegPath(GetSelectedInstall());
@@ -437,6 +449,7 @@ namespace GWMultiLaunch
                 shortcutButton.Enabled = true;
                 setPathButton.Enabled = false;
                 startTexModButton.Enabled = false;
+                editArgButton.Enabled = false;
             }
             else if (profilesListBox.SelectedIndices.Count == 1)
             {
@@ -446,6 +459,7 @@ namespace GWMultiLaunch
                 shortcutButton.Enabled = true;
                 setPathButton.Enabled = true;
                 startTexModButton.Enabled = true;
+                editArgButton.Enabled = true;
             }
             else
             {
@@ -455,10 +469,12 @@ namespace GWMultiLaunch
                 shortcutButton.Enabled = false;
                 setPathButton.Enabled = false;
                 startTexModButton.Enabled = false;
+                editArgButton.Enabled = false;
             }
         }
         
         #endregion
+
 
     }
 }

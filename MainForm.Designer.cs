@@ -28,6 +28,7 @@ namespace GWMultiLaunch
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.basicControlsToolStrip = new System.Windows.Forms.ToolStrip();
             this.launchButton = new System.Windows.Forms.ToolStripButton();
@@ -44,6 +45,8 @@ namespace GWMultiLaunch
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitButton = new System.Windows.Forms.ToolStripButton();
             this.profilesListBox = new System.Windows.Forms.ListBox();
+            this.editArgButton = new System.Windows.Forms.Button();
+            this.auxToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.argumentsTextBox = new GWMultiLaunch.SelfLabeledTextBox();
             this.forceUnlockCheckBox = new GWMultiLaunch.ToolStripCheckBox();
             this.basicControlsToolStrip.SuspendLayout();
@@ -223,6 +226,20 @@ namespace GWMultiLaunch
             this.profilesListBox.DragDrop += new System.Windows.Forms.DragEventHandler(this.profilesListBox_DragDrop);
             this.profilesListBox.DragEnter += new System.Windows.Forms.DragEventHandler(this.profilesListBox_DragEnter);
             // 
+            // editArgButton
+            // 
+            this.editArgButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.editArgButton.FlatAppearance.BorderSize = 0;
+            this.editArgButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.editArgButton.Image = ((System.Drawing.Image)(resources.GetObject("editArgButton.Image")));
+            this.editArgButton.Location = new System.Drawing.Point(366, 203);
+            this.editArgButton.Name = "editArgButton";
+            this.editArgButton.Size = new System.Drawing.Size(25, 25);
+            this.editArgButton.TabIndex = 4;
+            this.auxToolTip.SetToolTip(this.editArgButton, "Open Arguments Wizard");
+            this.editArgButton.UseVisualStyleBackColor = true;
+            this.editArgButton.Click += new System.EventHandler(this.editArgButton_Click);
+            // 
             // argumentsTextBox
             // 
             this.argumentsTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
@@ -233,7 +250,7 @@ namespace GWMultiLaunch
             this.argumentsTextBox.LabelText = "Launch Arguments";
             this.argumentsTextBox.Location = new System.Drawing.Point(0, 203);
             this.argumentsTextBox.Name = "argumentsTextBox";
-            this.argumentsTextBox.Size = new System.Drawing.Size(392, 26);
+            this.argumentsTextBox.Size = new System.Drawing.Size(365, 26);
             this.argumentsTextBox.TabIndex = 2;
             this.argumentsTextBox.TextChanged += new System.EventHandler(this.argumentsTextBox_TextChanged);
             // 
@@ -264,6 +281,7 @@ namespace GWMultiLaunch
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(392, 285);
+            this.Controls.Add(this.editArgButton);
             this.Controls.Add(this.argumentsTextBox);
             this.Controls.Add(this.profilesListBox);
             this.Controls.Add(this.expertControlsToolStrip);
@@ -271,6 +289,7 @@ namespace GWMultiLaunch
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(375, 192);
             this.Name = "MainForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Guild Wars Multi-Launch (v0.6)";
             this.basicControlsToolStrip.ResumeLayout(false);
             this.basicControlsToolStrip.PerformLayout();
@@ -300,6 +319,8 @@ namespace GWMultiLaunch
         private ToolStripCheckBox forceUnlockCheckBox;
         private SelfLabeledTextBox argumentsTextBox;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.Button editArgButton;
+        private System.Windows.Forms.ToolTip auxToolTip;
 
     }
 }
