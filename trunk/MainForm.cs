@@ -28,7 +28,8 @@ namespace GWMultiLaunch
 {
     public partial class MainForm : Form
     {
-        private string mSelectedPath = string.Empty;
+        private int mSelectedIndex = -1;
+        private bool mSwitchingArgs = false;
 
         public MainForm()
         {
@@ -40,9 +41,9 @@ namespace GWMultiLaunch
         private void InitUI()
         {
             //Populate listbox with copies
-            foreach (KeyValuePair<string, string> i in Program.settings.Profiles)
+            foreach (SettingsManager.Profile p in Program.settings.Profiles)
             {
-                profilesListBox.Items.Add(i.Key);
+                profilesListBox.Items.Add(p.Path);
             }
 
             //Select copies
@@ -96,7 +97,6 @@ namespace GWMultiLaunch
 
         private void launchButton_Click(object sender, EventArgs e)
         {
-            UpdateSelectedPath();
             LaunchCopies();
         }
 
@@ -170,9 +170,13 @@ namespace GWMultiLaunch
             UpdateButtonStates();
         }
 
-        private void argumentsTextBox_Leave(object sender, EventArgs e)
+        private void argumentsTextBox_TextChanged(object sender, EventArgs e)
         {
-            Program.settings.UpdateProfile(mSelectedPath, argumentsTextBox.Text);
+            //don't update profile when textbox is being populated with data from profiles
+            if (mSwitchingArgs == false)
+            {
+                Program.settings.UpdateProfile(mSelectedIndex, argumentsTextBox.Text);
+            }
         }
 
         private void forceUnlockCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -234,19 +238,16 @@ namespace GWMultiLaunch
         {
             bool success = false;
 
-            if (!profilesListBox.Items.Contains(gwPath))
-            {
-                //add to file
-                Program.settings.AddProfile(gwPath, arguments);
+            //add to file
+            Program.settings.AddProfile(gwPath, arguments);
 
-                //add to list
-                profilesListBox.Items.Add(gwPath);
+            //add to list
+            profilesListBox.Items.Add(gwPath);
 
-                //deselect all
-                profilesListBox.SelectedIndex = -1;
+            //deselect all
+            profilesListBox.SelectedIndex = -1;
 
-                success = true;
-            }
+            success = true;
 
             return success;
         }
@@ -258,16 +259,19 @@ namespace GWMultiLaunch
                 return;
             }
 
-            string[] selectedInstalls = GetSelectedInstalls();
+            int[] selectedInstalls = GetSelectedInstalls();
 
-            foreach (string selectedInstall in selectedInstalls)
+            //we want it in reverse order, remove highest index values first
+            Array.Reverse(selectedInstalls);
+
+            foreach (int selectedInstall in selectedInstalls)
             {
                 //remove from file
                 Program.settings.RemoveProfile(selectedInstall);
 
                 //remove from list
-                mSelectedPath = string.Empty;
-                profilesListBox.Items.Remove(selectedInstall);
+                mSelectedIndex = -1;
+                profilesListBox.Items.RemoveAt(selectedInstall);
             }
         }
 
@@ -324,7 +328,7 @@ namespace GWMultiLaunch
 
         private void LaunchCopies()
         {
-            foreach (string copy in GetSelectedInstalls())
+            foreach (int copy in GetSelectedInstalls())
             {
                 LaunchGame(copy);
             }
@@ -332,19 +336,9 @@ namespace GWMultiLaunch
 
         private void LaunchGame(int index)
         {
-            try
-            {
-                string gwPath = profilesListBox.Items[index].ToString();
-                LaunchGame(gwPath);
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message, Program.ERROR_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
+            string gwPath = Program.settings.GetPath(index);
+            string gwArgs = Program.settings.GetArguments(index);
 
-        private void LaunchGame(string gwPath)
-        {
             //check if the install exists
             if (!File.Exists(gwPath))
             {
@@ -360,7 +354,7 @@ namespace GWMultiLaunch
                 }
 
                 //attempt to launch
-                if (LaunchGame(gwPath, Program.settings.GetArguments(gwPath), forced))
+                if (LaunchGame(gwPath, gwArgs, forced))
                 {
                     //give time for gw to read path before it gets changed again.
                     System.Threading.Thread.Sleep(Program.settings.RegistryCooldown);
@@ -385,30 +379,27 @@ namespace GWMultiLaunch
             return string.Empty;
         }
 
-        private string[] GetSelectedInstalls()
+        private int[] GetSelectedInstalls()
         {
-            string[] selectedItems = new string[profilesListBox.SelectedItems.Count];
-            profilesListBox.SelectedItems.CopyTo(selectedItems, 0);
+            int[] selectedItems = new int[profilesListBox.SelectedItems.Count];
+            profilesListBox.SelectedIndices.CopyTo(selectedItems, 0);
             return selectedItems;
         }
 
         private void UpdateSelectedPath()
         {
-            //update arguments of last selected copy with arguments in textbox
-            Program.settings.UpdateProfile(mSelectedPath, argumentsTextBox.Text);
-
             if (profilesListBox.SelectedIndices.Count == 1)
             {
                 //one item selected
-                mSelectedPath = profilesListBox.SelectedItem.ToString();
+                mSelectedIndex = profilesListBox.SelectedIndex;
             }
             else
             {
                 //multiple items or nothing selected
-                mSelectedPath = string.Empty;
+                mSelectedIndex = -1;
             }
 
-            //update selected indices
+            //update selected indices in profiles
             int[] indicesArr = new int[profilesListBox.SelectedIndices.Count];
             profilesListBox.SelectedIndices.CopyTo(indicesArr, 0);
             Program.settings.SelectedIndices = indicesArr;
@@ -420,13 +411,19 @@ namespace GWMultiLaunch
             {
                 //one item selected
                 argumentsTextBox.Enabled = true;
-                argumentsTextBox.Text = Program.settings.GetArguments(mSelectedPath);
+
+                mSwitchingArgs = true;
+                argumentsTextBox.Text = Program.settings.GetArguments(mSelectedIndex);
+                mSwitchingArgs = false;
             }
             else
             {
                 //multiple items or nothing selected
                 argumentsTextBox.Enabled = false;
+
+                mSwitchingArgs = true;
                 argumentsTextBox.Text = string.Empty;
+                mSwitchingArgs = false;
             }
         }
 

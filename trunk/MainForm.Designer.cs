@@ -43,9 +43,9 @@ namespace GWMultiLaunch
             this.startTexModButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitButton = new System.Windows.Forms.ToolStripButton();
-            this.forceUnlockCheckBox = new GWMultiLaunch.ToolStripCheckBox();
             this.profilesListBox = new System.Windows.Forms.ListBox();
             this.argumentsTextBox = new GWMultiLaunch.SelfLabeledTextBox();
+            this.forceUnlockCheckBox = new GWMultiLaunch.ToolStripCheckBox();
             this.basicControlsToolStrip.SuspendLayout();
             this.expertControlsToolStrip.SuspendLayout();
             this.SuspendLayout();
@@ -203,28 +203,6 @@ namespace GWMultiLaunch
             this.exitButton.Text = "Exit";
             this.exitButton.Click += new System.EventHandler(this.exitButton_Click);
             // 
-            // forceUnlockCheckBox
-            // 
-            this.forceUnlockCheckBox.BackColor = System.Drawing.Color.Transparent;
-            // 
-            // forceUnlockCheckBox
-            // 
-            this.forceUnlockCheckBox.CheckBoxControl.AccessibleName = "forceUnlockCheckBox";
-            this.forceUnlockCheckBox.CheckBoxControl.BackColor = System.Drawing.Color.Transparent;
-            this.forceUnlockCheckBox.CheckBoxControl.Checked = true;
-            this.forceUnlockCheckBox.CheckBoxControl.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.forceUnlockCheckBox.CheckBoxControl.Location = new System.Drawing.Point(184, 1);
-            this.forceUnlockCheckBox.CheckBoxControl.Name = "toolStripCheckBox1";
-            this.forceUnlockCheckBox.CheckBoxControl.Size = new System.Drawing.Size(123, 52);
-            this.forceUnlockCheckBox.CheckBoxControl.TabIndex = 1;
-            this.forceUnlockCheckBox.CheckBoxControl.Text = "Force gw.dat unlock";
-            this.forceUnlockCheckBox.CheckBoxControl.UseVisualStyleBackColor = false;
-            this.forceUnlockCheckBox.Name = "forceUnlockCheckBox";
-            this.forceUnlockCheckBox.Size = new System.Drawing.Size(123, 52);
-            this.forceUnlockCheckBox.Text = "Force gw.dat unlock";
-            this.forceUnlockCheckBox.ToolTipText = "Enables multi-launching of same copy. (experimental)";
-            this.forceUnlockCheckBox.CheckedChanged += new System.EventHandler(this.forceUnlockCheckBox_CheckedChanged);
-            // 
             // profilesListBox
             // 
             this.profilesListBox.AllowDrop = true;
@@ -257,7 +235,29 @@ namespace GWMultiLaunch
             this.argumentsTextBox.Name = "argumentsTextBox";
             this.argumentsTextBox.Size = new System.Drawing.Size(392, 26);
             this.argumentsTextBox.TabIndex = 2;
-            this.argumentsTextBox.Leave += new System.EventHandler(this.argumentsTextBox_Leave);
+            this.argumentsTextBox.TextChanged += new System.EventHandler(this.argumentsTextBox_TextChanged);
+            // 
+            // forceUnlockCheckBox
+            // 
+            this.forceUnlockCheckBox.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // forceUnlockCheckBox
+            // 
+            this.forceUnlockCheckBox.CheckBoxControl.AccessibleName = "forceUnlockCheckBox";
+            this.forceUnlockCheckBox.CheckBoxControl.BackColor = System.Drawing.Color.Transparent;
+            this.forceUnlockCheckBox.CheckBoxControl.Checked = true;
+            this.forceUnlockCheckBox.CheckBoxControl.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.forceUnlockCheckBox.CheckBoxControl.Location = new System.Drawing.Point(184, 1);
+            this.forceUnlockCheckBox.CheckBoxControl.Name = "toolStripCheckBox1";
+            this.forceUnlockCheckBox.CheckBoxControl.Size = new System.Drawing.Size(123, 52);
+            this.forceUnlockCheckBox.CheckBoxControl.TabIndex = 1;
+            this.forceUnlockCheckBox.CheckBoxControl.Text = "Force gw.dat unlock";
+            this.forceUnlockCheckBox.CheckBoxControl.UseVisualStyleBackColor = false;
+            this.forceUnlockCheckBox.Name = "forceUnlockCheckBox";
+            this.forceUnlockCheckBox.Size = new System.Drawing.Size(123, 52);
+            this.forceUnlockCheckBox.Text = "Force gw.dat unlock";
+            this.forceUnlockCheckBox.ToolTipText = "Enables multi-launching of same copy. (experimental)";
+            this.forceUnlockCheckBox.CheckedChanged += new System.EventHandler(this.forceUnlockCheckBox_CheckedChanged);
             // 
             // MainForm
             // 
