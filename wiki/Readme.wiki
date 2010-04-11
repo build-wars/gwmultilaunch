@@ -16,7 +16,7 @@ Launch multiple copies of Guild Wars.
 
   # Make copies of the Guild Wars folder
   # Add the gw.exe(s) to the list
-  # Launch or make special shortcut for launching
+  # Launch or create shortcuts for launching
   
   * Notes
     * Vista/Win7: May need to start GWML as admin if GW is installed to "Program Files" folder
@@ -28,10 +28,11 @@ Launch multiple copies of Guild Wars.
 
   * Add - add an existing copy
   * Remove - remove selected copy
-  * Make Copy - make a copy
+  * Make Copy - create new copy of guild wars
   * Launch - start the selected copies
   * Make Shortcut - for starting selected copy
   * Make Master Shortcut - for starting next unlaunched copy
+  * Argument Wizard - easy way to edit gw.exe launch switches
 
 ==Expert Controls==
 
@@ -81,7 +82,7 @@ A: There are issues with .NET framework configuration or install. If you get "Pr
 
 Q: What is a Mutex?
 
-A: Simple answer, a flag that gw.exe puts up so new gw.exe processes know to not launch. Long answer, check wikipedia.
+A: Simple answer, a flag that guild wars puts up which prevents another guild wars copy from starting. Long answer, check wikipedia.
 
 Q: How do I report a bug?
 
@@ -105,6 +106,13 @@ http://code.google.com/p/gwmultilaunch/
   * gergely.nagy - thank you for the idea and sample code to enable a cycling master shortcut
 
 ==History==
+v0.6 (2010/04/10)
+  * Fixed "-character" switch argument passing for shortcuts
+    * Shortcuts to launch individual copies may need to be remade to be compatible with new version 
+  * Allows storing multiple profiles of same path
+    * Enables associating different arguments with same copy
+  * Added arguments wizard
+  * New art for buttons (less intense colors)
 
 v0.6RC (2009/09/26)
   * Fixed registry path setting for certain setups of Guild Wars on 64-bit oses (requires admin)
