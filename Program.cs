@@ -165,13 +165,13 @@ namespace GWMultiLaunch
         {
             bool launchAttempted = false;
 
-            foreach (KeyValuePair<string, string> i in Program.settings.Profiles)
+            foreach (SettingsManager.Profile p in Program.settings.Profiles)
             {
-                String currentPath = i.Key;
+                String currentPath = p.Path;
 
                 if (MainForm.IsCopyRunning(currentPath) == false)
                 {
-                    LaunchByArguments(currentPath, i.Value);
+                    LaunchByArguments(currentPath, p.Arguments);
                     launchAttempted = true;
                     break;
                 }

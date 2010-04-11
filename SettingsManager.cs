@@ -45,10 +45,16 @@ namespace GWMultiLaunch
 
         #region Structures
 
-        private struct LaunchProfiles
+        public class Profile
         {
-            public int[] SelectedIndices;
-            public Dictionary<string, string> Profiles;
+            public Profile(string path, string arguments)
+            {
+                this.Path = path;
+                this.Arguments = arguments;
+            }
+
+            public string Path;
+            public string Arguments;
         }
 
         #endregion
@@ -73,7 +79,9 @@ namespace GWMultiLaunch
 
         #region Member Variables
 
-        private LaunchProfiles mProfiles;
+        private List<Profile> mProfiles;
+        private int[] mSelectedIndices;
+
         private string mINIFilePath;
         private string mTexModPath;
         private int mRegistryCooldown;
@@ -89,9 +97,9 @@ namespace GWMultiLaunch
             set { mForceUnlock = value; }
         }
 
-        public Dictionary<string, string> Profiles
+        public List<Profile> Profiles
         {
-            get { return mProfiles.Profiles; }
+            get { return mProfiles; }
         }
 
         public int RegistryCooldown
@@ -101,8 +109,8 @@ namespace GWMultiLaunch
 
         public int[] SelectedIndices
         {
-            get { return mProfiles.SelectedIndices; }
-            set { mProfiles.SelectedIndices = value; }
+            get { return mSelectedIndices; }
+            set { mSelectedIndices = value; }
         }
 
         public string TexModPath
@@ -127,32 +135,65 @@ namespace GWMultiLaunch
             Save();
         }
 
-        public void AddProfile(string pathToAdd, string argument)
+        public void AddProfile(string path, string arguments)
         {
-            mProfiles.Profiles[pathToAdd] = argument;
+            Profile p = new Profile(path,arguments);
+
+            mProfiles.Add(p);
         }
 
-        public void UpdateProfile(string pathToUpdate, string argument)
+        public void UpdateProfile(int index, string arguments)
         {
-            if (mProfiles.Profiles.ContainsKey(pathToUpdate) == false)
+            try
+            {
+                mProfiles[index].Arguments = arguments;
+            }
+            catch (Exception)
             {
                 return;
             }
-            mProfiles.Profiles[pathToUpdate] = argument;
         }
 
-        public void RemoveProfile(string pathToRemove)
+        public void RemoveProfile(int index)
         {
-            mProfiles.Profiles.Remove(pathToRemove);
+            try
+            {
+                mProfiles.RemoveAt(index);
+            }
+            catch (Exception)
+            {
+                return;
+            }
         }
 
-        public string GetArguments(string path)
+        public string GetArguments(int index)
         {
-            string argument;
+            string arguments = string.Empty;
+            
+            try
+            {
+                arguments = mProfiles[index].Arguments;
+            }
+            catch (Exception)
+            {
+            }
 
-            mProfiles.Profiles.TryGetValue(path, out argument);
+            return arguments;
+        }
 
-            return argument;
+        public string GetPath(int index)
+        {
+            string path = string.Empty;
+
+            try
+            {
+                path = mProfiles[index].Path;
+            }
+            catch (Exception)
+            {
+            }
+
+            return path;
         }
 
         private void Load()
@@ -197,17 +238,17 @@ namespace GWMultiLaunch
             string selectionString = GetIniValue(PROFILES_SECTION, SELECTED_KEY_NAME, mINIFilePath);
             string[] selectionStringArray = selectionString.Split(NUM_SPLIT_CHAR);
 
-            mProfiles.SelectedIndices = new int[selectionStringArray.Length];
+            mSelectedIndices = new int[selectionStringArray.Length];
 
             for (int i = 0; i < selectionStringArray.Length; i++)
             {
                 try
                 {
-                    mProfiles.SelectedIndices[i] = int.Parse(selectionStringArray[i]);
+                    mSelectedIndices[i] = int.Parse(selectionStringArray[i]);
                 }
                 catch (Exception)
                 {
-                    mProfiles.SelectedIndices = new int[0];
+                    mSelectedIndices = new int[0];
                     break;
                 }
             }
@@ -215,11 +256,11 @@ namespace GWMultiLaunch
 
         private void LoadProfileList()
         {
-            mProfiles.Profiles = new Dictionary<string, string>();
+            mProfiles = new List<Profile>();
 
             LoadProfileListFromINI();
 
-            if (mProfiles.Profiles.Count == 0)
+            if (mProfiles.Count == 0)
             {
                 //add default install
                 LoadInitialCopy();
@@ -240,7 +281,8 @@ namespace GWMultiLaunch
 
                 if (values.Length >= 2)
                 {
-                    mProfiles.Profiles.Add(values[0], values[1]);
+                    Profile p = new Profile(values[0], values[1]);
+                    mProfiles.Add(p);
                 }
                 else
                 {
@@ -256,7 +298,8 @@ namespace GWMultiLaunch
 
             if (gwPath != string.Empty)
             {
-                mProfiles.Profiles.Add(gwPath, gwArg);
+                Profile p = new Profile(gwPath, gwArg);
+                mProfiles.Add(p);
             }
         }
 
@@ -305,10 +348,10 @@ namespace GWMultiLaunch
             string key;
             string value;
 
-            foreach (KeyValuePair<string, string> kvp in mProfiles.Profiles)
+            foreach (Profile p in mProfiles)
             {
                 key = PROFILE_KEY_NAME + j.ToString();
-                value = kvp.Key + PATH_ARG_SPLIT_CHAR + kvp.Value;
+                value = p.Path + PATH_ARG_SPLIT_CHAR + p.Arguments;
 
                 WriteINIValue(PROFILES_SECTION, key, value, mINIFilePath);
 

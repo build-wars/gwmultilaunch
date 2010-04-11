@@ -133,14 +133,16 @@ namespace GWMultiLaunch
 
         #region Shortcuts
 
-        private static int CreateShortcut(string[] gwPaths)
+        private static int CreateShortcut(int[] selectedInstalls)
         {
             int nShortcutsCreated = 0;
+            string gwPath = string.Empty;
             string gwArgs = string.Empty;
 
-            foreach (string gwPath in gwPaths)
+            foreach (int index in selectedInstalls)
             {
-                gwArgs = Program.settings.GetArguments(gwPath);
+                gwPath = Program.settings.GetPath(index);
+                gwArgs = Program.settings.GetArguments(index);
 
                 if (ShortcutCreator.CreateSingleLaunchShortcut(gwPath, gwArgs))
                 {
