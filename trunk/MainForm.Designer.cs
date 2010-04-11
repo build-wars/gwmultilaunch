@@ -30,10 +30,11 @@ namespace GWMultiLaunch
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.basicControlsToolStrip = new System.Windows.Forms.ToolStrip();
+            this.launchButton = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.addButton = new System.Windows.Forms.ToolStripButton();
             this.removeButton = new System.Windows.Forms.ToolStripButton();
             this.copyButton = new System.Windows.Forms.ToolStripButton();
-            this.launchButton = new System.Windows.Forms.ToolStripButton();
             this.masterShortcutButton = new System.Windows.Forms.ToolStripButton();
             this.shortcutButton = new System.Windows.Forms.ToolStripButton();
             this.expertControlsToolStrip = new System.Windows.Forms.ToolStrip();
@@ -42,10 +43,9 @@ namespace GWMultiLaunch
             this.startTexModButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitButton = new System.Windows.Forms.ToolStripButton();
-            this.profilesListBox = new System.Windows.Forms.ListBox();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.argumentsTextBox = new GWMultiLaunch.SelfLabeledTextBox();
             this.forceUnlockCheckBox = new GWMultiLaunch.ToolStripCheckBox();
+            this.profilesListBox = new System.Windows.Forms.ListBox();
+            this.argumentsTextBox = new GWMultiLaunch.SelfLabeledTextBox();
             this.basicControlsToolStrip.SuspendLayout();
             this.expertControlsToolStrip.SuspendLayout();
             this.SuspendLayout();
@@ -68,6 +68,22 @@ namespace GWMultiLaunch
             this.basicControlsToolStrip.Size = new System.Drawing.Size(392, 55);
             this.basicControlsToolStrip.TabIndex = 0;
             this.basicControlsToolStrip.Text = "Basic Controls";
+            // 
+            // launchButton
+            // 
+            this.launchButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.launchButton.Image = ((System.Drawing.Image)(resources.GetObject("launchButton.Image")));
+            this.launchButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.launchButton.Name = "launchButton";
+            this.launchButton.Padding = new System.Windows.Forms.Padding(20, 0, 10, 0);
+            this.launchButton.Size = new System.Drawing.Size(82, 52);
+            this.launchButton.Text = "Launch";
+            this.launchButton.Click += new System.EventHandler(this.launchButton_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 55);
             // 
             // addButton
             // 
@@ -98,17 +114,6 @@ namespace GWMultiLaunch
             this.copyButton.Size = new System.Drawing.Size(52, 52);
             this.copyButton.Text = "Make Copy";
             this.copyButton.Click += new System.EventHandler(this.copyButton_Click);
-            // 
-            // launchButton
-            // 
-            this.launchButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.launchButton.Image = ((System.Drawing.Image)(resources.GetObject("launchButton.Image")));
-            this.launchButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.launchButton.Name = "launchButton";
-            this.launchButton.Padding = new System.Windows.Forms.Padding(20, 0, 10, 0);
-            this.launchButton.Size = new System.Drawing.Size(82, 52);
-            this.launchButton.Text = "Launch";
-            this.launchButton.Click += new System.EventHandler(this.launchButton_Click);
             // 
             // masterShortcutButton
             // 
@@ -198,45 +203,6 @@ namespace GWMultiLaunch
             this.exitButton.Text = "Exit";
             this.exitButton.Click += new System.EventHandler(this.exitButton_Click);
             // 
-            // profilesListBox
-            // 
-            this.profilesListBox.AllowDrop = true;
-            this.profilesListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.profilesListBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.profilesListBox.FormattingEnabled = true;
-            this.profilesListBox.IntegralHeight = false;
-            this.profilesListBox.ItemHeight = 20;
-            this.profilesListBox.Location = new System.Drawing.Point(0, 58);
-            this.profilesListBox.Name = "profilesListBox";
-            this.profilesListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.profilesListBox.Size = new System.Drawing.Size(392, 144);
-            this.profilesListBox.TabIndex = 1;
-            this.profilesListBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.profilesListBox_MouseDoubleClick);
-            this.profilesListBox.DragEnter += new System.Windows.Forms.DragEventHandler(this.profilesListBox_DragEnter);
-            this.profilesListBox.DragDrop += new System.Windows.Forms.DragEventHandler(this.profilesListBox_DragDrop);
-            this.profilesListBox.SelectedIndexChanged += new System.EventHandler(this.profilesListBox_SelectedIndexChanged);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 55);
-            // 
-            // argumentsTextBox
-            // 
-            this.argumentsTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.argumentsTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.argumentsTextBox.LabelColor = System.Drawing.SystemColors.GrayText;
-            this.argumentsTextBox.LabelFont = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.argumentsTextBox.LabelText = "Launch Arguments";
-            this.argumentsTextBox.Location = new System.Drawing.Point(0, 203);
-            this.argumentsTextBox.Name = "argumentsTextBox";
-            this.argumentsTextBox.Size = new System.Drawing.Size(392, 26);
-            this.argumentsTextBox.TabIndex = 2;
-            this.argumentsTextBox.Leave += new System.EventHandler(this.argumentsTextBox_Leave);
-            // 
             // forceUnlockCheckBox
             // 
             this.forceUnlockCheckBox.BackColor = System.Drawing.Color.Transparent;
@@ -259,6 +225,40 @@ namespace GWMultiLaunch
             this.forceUnlockCheckBox.ToolTipText = "Enables multi-launching of same copy. (experimental)";
             this.forceUnlockCheckBox.CheckedChanged += new System.EventHandler(this.forceUnlockCheckBox_CheckedChanged);
             // 
+            // profilesListBox
+            // 
+            this.profilesListBox.AllowDrop = true;
+            this.profilesListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.profilesListBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.profilesListBox.FormattingEnabled = true;
+            this.profilesListBox.IntegralHeight = false;
+            this.profilesListBox.ItemHeight = 20;
+            this.profilesListBox.Location = new System.Drawing.Point(0, 58);
+            this.profilesListBox.Name = "profilesListBox";
+            this.profilesListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+            this.profilesListBox.Size = new System.Drawing.Size(392, 144);
+            this.profilesListBox.TabIndex = 1;
+            this.profilesListBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.profilesListBox_MouseDoubleClick);
+            this.profilesListBox.SelectedIndexChanged += new System.EventHandler(this.profilesListBox_SelectedIndexChanged);
+            this.profilesListBox.DragDrop += new System.Windows.Forms.DragEventHandler(this.profilesListBox_DragDrop);
+            this.profilesListBox.DragEnter += new System.Windows.Forms.DragEventHandler(this.profilesListBox_DragEnter);
+            // 
+            // argumentsTextBox
+            // 
+            this.argumentsTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.argumentsTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.argumentsTextBox.LabelColor = System.Drawing.SystemColors.GrayText;
+            this.argumentsTextBox.LabelFont = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.argumentsTextBox.LabelText = "Launch Arguments";
+            this.argumentsTextBox.Location = new System.Drawing.Point(0, 203);
+            this.argumentsTextBox.Name = "argumentsTextBox";
+            this.argumentsTextBox.Size = new System.Drawing.Size(392, 26);
+            this.argumentsTextBox.TabIndex = 2;
+            this.argumentsTextBox.Leave += new System.EventHandler(this.argumentsTextBox_Leave);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -271,7 +271,7 @@ namespace GWMultiLaunch
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(375, 192);
             this.Name = "MainForm";
-            this.Text = "Guild Wars Multi-Launch (v0.6 RC)";
+            this.Text = "Guild Wars Multi-Launch (v0.6)";
             this.basicControlsToolStrip.ResumeLayout(false);
             this.basicControlsToolStrip.PerformLayout();
             this.expertControlsToolStrip.ResumeLayout(false);

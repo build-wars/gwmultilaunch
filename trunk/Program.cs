@@ -1,7 +1,7 @@
 //Guild Wars MultiLaunch - Safe and efficient way to launch multiple GWs.
 //The Guild Wars executable is never modified, keeping you inline with the tos.
 //
-//Copyright (C) 2009  IMKey@GuildWarsGuru
+//Copyright (C) 2010  IMKey@GuildWarsGuru
 
 //This program is free software: you can redistribute it and/or modify
 //it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
 
 using System;
 using System.IO;
+using System.Text;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
@@ -71,7 +72,7 @@ namespace GWMultiLaunch
 
             if (autoLaunch)
             {
-                //launch by trying gw paths in the ini file
+                //launch by trying differents copies from the ini file
                 LaunchAvailableCopy();
             }
             else
@@ -95,17 +96,46 @@ namespace GWMultiLaunch
         /// Retrieves Guild Wars launch arguments.
         /// </summary>
         /// <param name="programArgs">GWMultiLaunch arguments.</param>
-        /// <returns>GW launch arguments. Empty string if none found.</returns>
+        /// <returns>GW launch arguments. Empty string array if none found.</returns>
         static string GetGWLaunchArguments(string[] programArgs)
         {
             string gwLaunchArgs = string.Empty;
 
-            if (programArgs.Length >= 2)
+            if (programArgs.Length > 1)
             {
-                gwLaunchArgs = programArgs[1];
+                string[] argArray = new string[programArgs.Length-1];
+
+                //copy everything but the first argument
+                Array.Copy(programArgs, 1, argArray, 0, argArray.Length);
+
+                gwLaunchArgs = ConvertArgumentArray(argArray);
             }
 
             return gwLaunchArgs;
+        }
+
+        static string ConvertArgumentArray(string[] argumentsArray)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (string s in argumentsArray)
+            {
+                if (s.Contains(" "))
+                {
+                    sb.Append('"');
+                    sb.Append(s);
+                    sb.Append('"');
+                }
+                else
+                {
+                    sb.Append(s);
+                }
+
+                sb.Append(' ');
+            }
+
+            //we don't want last space
+            return sb.ToString(0, Math.Max(0, sb.Length-1));
         }
 
         /// <summary>

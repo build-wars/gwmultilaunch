@@ -1,7 +1,7 @@
 //Guild Wars MultiLaunch - Safe and efficient way to launch multiple GWs.
 //The Guild Wars executable is never modified, keeping you inline with the tos.
 //
-//Copyright (C) 2009  IMKey@IMKey@GuildWarsGuru
+//Copyright (C) 2010  IMKey@GuildWarsGuru
 
 //This program is free software: you can redistribute it and/or modify
 //it under the terms of the GNU General Public License as published by

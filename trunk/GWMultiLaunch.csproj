@@ -23,7 +23,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <TargetZone>Custom</TargetZone>
-    <GenerateManifests>true</GenerateManifests>
+    <GenerateManifests>false</GenerateManifests>
     <ExcludedPermissions>
     </ExcludedPermissions>
     <ApplicationIcon>GWMultiLaunch.ico</ApplicationIcon>
