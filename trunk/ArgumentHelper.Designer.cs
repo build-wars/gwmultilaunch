@@ -42,7 +42,7 @@ namespace GWMultiLaunch
             // okButton
             // 
             this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.okButton.Location = new System.Drawing.Point(224, 506);
+            this.okButton.Location = new System.Drawing.Point(224, 511);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 23);
             this.okButton.TabIndex = 0;
@@ -53,7 +53,7 @@ namespace GWMultiLaunch
             // cancelButton
             // 
             this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.cancelButton.Location = new System.Drawing.Point(305, 506);
+            this.cancelButton.Location = new System.Drawing.Point(305, 511);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(75, 23);
             this.cancelButton.TabIndex = 1;
@@ -81,7 +81,7 @@ namespace GWMultiLaunch
             this.gwSwitchesGridView.Name = "gwSwitchesGridView";
             this.gwSwitchesGridView.RowHeadersVisible = false;
             this.gwSwitchesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.gwSwitchesGridView.Size = new System.Drawing.Size(368, 483);
+            this.gwSwitchesGridView.Size = new System.Drawing.Size(368, 488);
             this.gwSwitchesGridView.TabIndex = 2;
             this.gwSwitchesGridView.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.gwSwitchesGridView_CellValueChanged);
             this.gwSwitchesGridView.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gwSwitchesGridView_CellDoubleClick);
@@ -111,7 +111,7 @@ namespace GWMultiLaunch
             // 
             this.linkLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(12, 511);
+            this.linkLabel1.Location = new System.Drawing.Point(12, 516);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(142, 13);
             this.linkLabel1.TabIndex = 3;
@@ -123,7 +123,7 @@ namespace GWMultiLaunch
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(392, 536);
+            this.ClientSize = new System.Drawing.Size(392, 541);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.gwSwitchesGridView);
             this.Controls.Add(this.cancelButton);
